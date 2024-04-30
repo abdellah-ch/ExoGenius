@@ -1,7 +1,13 @@
+import Banner from "../components/molecules/Banner"
 
 function LandingPage() {
     return (
-        <div></div>
+        <>
+            <Banner />
+            <div className="mt-[20rem]">
+                features
+            </div>
+        </>
     )
 }
 
