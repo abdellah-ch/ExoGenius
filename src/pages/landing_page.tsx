@@ -1,14 +1,11 @@
-import Banner from "../components/molecules/Banner"
+import Banner from "../components/molecules/Banner";
 
 function LandingPage() {
-    return (
-        <>
-            <Banner />
-            <div className="mt-[20rem]">
-                features
-            </div>
-        </>
-    )
+  return (
+    <>
+      <Banner />
+    </>
+  );
 }
 
-export default LandingPage
+export default LandingPage;

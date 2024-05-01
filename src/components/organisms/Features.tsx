@@ -41,7 +41,7 @@ function Features() {
     },
   ];
   return (
-    <div className="h-[100%] flex flex-col items-center py-[20px] gap-[50px] m-auto max-w-[1000px] ">
+    <div className="h-[100%] flex flex-col items-center py-[20px] gap-[50px] m-auto max-w-[72rem] ">
       <div className="rounded-full bg-[#ffffff1a] w-[84px] h-[84px] flex items-center justify-center shadow-2xl">
         <div className="bg-white rounded-full w-[60px] h-[60px] flex items-center justify-center shadow-lg">
           <FaPencilAlt className="text-[#FB8500] text-4xl" />
@@ -54,7 +54,12 @@ function Features() {
 
       <div className=" w-[100%] md:flex-row md:flex-wrap  flex flex-col items-center justify-center md:gap-[20px] gap-[10px]">
         {featuresItems.map((item) => (
-          <Feature key={Math.random()} icon={item.icon} title={item.title} text={item.text} />
+          <Feature
+            key={Math.random()}
+            icon={item.icon}
+            title={item.title}
+            text={item.text}
+          />
         ))}
       </div>
     </div>
