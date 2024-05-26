@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 //import useAuthState from "../hooks/useAuth";
 import useProviderAuth from "../hooks/useProviderAuth";
 import { useToast } from "../components/ui/use-toast";
+import SectionFeatures from "../components/molecules/SectionFeatures";
 
 function LandingPage() {
   const [openModal, setOpenModal] = useState(false);
@@ -151,6 +152,7 @@ function LandingPage() {
         openModelRegister={openModelRegister}
         setOpenModelRegister={setOpenModelRegister}
       />
+      <SectionFeatures />
     </>
   );
 }
