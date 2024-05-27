@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-import { useCookies } from "react-cookie";
+import Cookies from "js-cookie";
 
 import { useNavigate } from "react-router-dom";
 
@@ -8,19 +8,19 @@ const useAuthStateTeacher = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [teacherId, setTeacherId] = useState(null);
 
-  const [cookies, setCookie] = useCookies(["token"]);
-
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!cookies.token) {
+    const token = Cookies.get("token");
+
+    if (!token) {
       setIsLoading(false);
       navigate("/");
     } else {
       fetch("http://localhost/TestToken", {
         method: "POST",
         mode: "cors", // no-cors, *cors, same-origin
-        body: JSON.stringify({ jwt: `${cookies.token}` }),
+        body: JSON.stringify({ jwt: `${token}` }),
       }).then((res) => {
         if (res.status == 200) {
           setIsLoading(false);

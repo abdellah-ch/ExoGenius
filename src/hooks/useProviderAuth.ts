@@ -1,13 +1,15 @@
 // import { useState } from "react";
 import { useToast } from "../components/ui/use-toast";
-import { useCookies } from "react-cookie";
+
+import Cookies from "js-cookie";
 
 import { useNavigate } from "react-router-dom";
 const useProviderAuth = () => {
   //   const [token, setToken] = useState(null);
   //   const [errors, setErrors] = useState(null);
   //   const [isLoading, setIsLoading] = useState(true);
-  const [cookies, setCookie, removeCookie] = useCookies(["token"]);
+
+  //const token = Cookies.get("token");
 
   const { toast } = useToast();
   const url = "http://localhost/Login";
@@ -32,7 +34,7 @@ const useProviderAuth = () => {
           toast({
             title: "all good",
           });
-          setCookie("token", data.jwt);
+          Cookies.set("token", data.jwt);
           //   console.log(data.jwt);
 
           navigate("/dashboard/ExamList");
@@ -42,7 +44,7 @@ const useProviderAuth = () => {
   };
 
   const logout = () => {
-    removeCookie("token");
+    Cookies.remove("token");
     navigate("/");
   };
   return {
