@@ -20,8 +20,8 @@ const DashboardLayout = () => {
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
         <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-        <main>
-          <div className="mx-auto max-w-screen-2xl p-4  2xl:p-10 h-[90vh] bg-zinc-100">
+        <main className="bg-zinc-100">
+          <div className="mx-auto w-[80vw] -2xl p-4  2xl:p-10 min-h-[90vh] h-[100%] bg-zinc-100">
             <Outlet />
           </div>
         </main>
