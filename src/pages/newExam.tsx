@@ -6,11 +6,12 @@ import { FaArrowRight } from "react-icons/fa";
 import { TbCircleNumber1 } from "react-icons/tb";
 import { TbCircleNumber2 } from "react-icons/tb";
 import { TbCircleNumber3 } from "react-icons/tb";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { FaCircleCheck } from "react-icons/fa6";
 import { FaSave } from "react-icons/fa";
 
 const NewExam = () => {
+  const TitleRef = useRef<HTMLInputElement>(null);
   // const result = await uploadFile(fileData, {
   //   publicKey: "YOUR_PUBLIC_KEY",
   //   store: "auto",
@@ -20,9 +21,13 @@ const NewExam = () => {
   //   },
   // });
   // console.log(`URL: ${file.cdnUrl}`);
-
+  const [examTitle, setExamTitle] = useState<string | undefined>(undefined);
+  //const [examTitle, setExamTitle] = useState<string>("");
   const [currentStep, setCurrentStep] = useState<number>(0);
-  const [uploadedFile, setUploadedFile] = useState<String | null>(null);
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const [duration, setDuration] = useState<number | undefined>(undefined);
+  const [subject, setSubject] = useState<string | null>(null);
+  const [isLocked, setIsLocked] = useState<boolean>(false);
 
   const steps = [
     <StepOne currentStep={currentStep} setCurrentStep={setCurrentStep} />,
@@ -33,7 +38,14 @@ const NewExam = () => {
       uploadedFile={uploadedFile}
     />,
     <WriteExam />,
-    <ExamConfig />,
+    <ExamConfig
+      duration={duration}
+      setDuration={setDuration}
+      subject={subject}
+      setSubject={setSubject}
+      isLocked={isLocked}
+      setIsLocked={setIsLocked}
+    />,
   ];
 
   // const handleNext = () => {
@@ -44,15 +56,21 @@ const NewExam = () => {
   // const handlePrev = () => {
   //   setCurrentStep((prevStep) => (prevStep - 1 + steps.length) % steps.length);
   // };
-
+  const handleSaveExam = () => {
+    console.log({ examTitle, uploadedFile, duration, subject, isLocked });
+  };
   return (
     <div className=" bg-zinc-100  md:flex flex-col items-center p-4 w-[100%] mx-auto hidden">
       <div className="w-full  bg-white dark:bg-zinc-900   rounded-lg shadow-md">
         <div className="w-full flex justify-between items-center mb-4 py-3 px-2 border-b-[1px] bg-gray">
           <input
+            ref={TitleRef}
             type="text"
             placeholder="Enter the exam name"
             className="border border-zinc-300  rounded-lg p-2 lg:w-[60%] w-[40%] "
+            onChange={() => {
+              setExamTitle(TitleRef.current?.value);
+            }}
           />
           <div className="flex  items-center justify-center space-x-2 gap-6">
             <div className="flex items-center space-x-1">
@@ -76,7 +94,7 @@ const NewExam = () => {
             </div>
             {currentStep === 3 ? (
               <button
-                onClick={() => {}}
+                onClick={handleSaveExam}
                 className="bg-zinc-400 dark:bg-zinc-600 text-white px-8 font-bold py-2 rounded-full flex items-center"
               >
                 Save

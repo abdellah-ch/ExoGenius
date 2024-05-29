@@ -1,12 +1,11 @@
 import { useRef } from "react";
 import image from "/UploadIcon.png";
-import { FileUploaderRegular } from "@uploadcare/react-uploader";
 
 interface StepProps {
   currentStep: number;
   setCurrentStep: React.Dispatch<React.SetStateAction<number>>;
-  uploadedFile: String;
-  setUploadedFile: React.Dispatch<React.SetStateAction<String | null>>;
+  uploadedFile: File | null;
+  setUploadedFile: React.Dispatch<React.SetStateAction<File | null>>;
 }
 
 const Upload = (props: StepProps) => {
@@ -15,7 +14,7 @@ const Upload = (props: StepProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const FileDropRef = useRef<HTMLInputElement>(null);
 
-  const alo = useRef<HTMLInputElement>(null);
+  // const alo = useRef<HTMLInputElement>(null);
 
   const handleDivClick = () => {
     if (fileInputRef.current) {
@@ -54,9 +53,18 @@ const Upload = (props: StepProps) => {
       // Handle file upload here, e.g., send the file to the server
       // console.log("Selected file:", file);
       // Example of how to send the file to a server
-      // const formData = new FormData();
-      // formData.append("file", file);
-      // props.setUploadedFile(file);
+      const formData = new FormData();
+      formData.append("file", file);
+
+      props.setUploadedFile(file);
+      // fetch("http://localhost/NewExam", {
+      //   method: "GET",
+      // }).then((res) => {
+      //   res.blob().then((result) => {
+      //     const url = window.URL.createObjectURL(result);
+      //     props.setUploadedFile(url);
+      //   });
+      // });
       props.setCurrentStep(3);
     }
   };
@@ -92,11 +100,6 @@ const Upload = (props: StepProps) => {
           />
         </div>
       </div>
-      <FileUploaderRegular
-        className="hidden"
-        onChange={() => {}}
-        pubkey="296fede39e3b73aa3b43"
-      />
     </div>
   );
 };
