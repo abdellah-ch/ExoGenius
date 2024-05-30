@@ -57,6 +57,7 @@ const Upload = (props: StepProps) => {
       formData.append("file", file);
 
       props.setUploadedFile(file);
+      console.log("Uploaded filefile:", file);
       // fetch("http://localhost/NewExam", {
       //   method: "GET",
       // }).then((res) => {

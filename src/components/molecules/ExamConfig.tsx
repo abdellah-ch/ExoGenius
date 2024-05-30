@@ -42,8 +42,8 @@ const defaultValues: Partial<ExamConfigFormValues> = {
   security_emails: true,
 };
 interface StepProps {
-  duration: number | undefined;
-  setDuration: React.Dispatch<React.SetStateAction<number | undefined>>;
+  duration: string | undefined;
+  setDuration: React.Dispatch<React.SetStateAction<string | undefined>>;
   subject: string | null;
   setSubject: React.Dispatch<React.SetStateAction<string | null>>;
   isLocked: boolean;
@@ -72,7 +72,7 @@ function ExamConfig(props: StepProps) {
   );
 
   const handelChange = () => {
-    props.setDuration(Number(TimeRef.current?.value));
+    props.setDuration(TimeRef.current?.value);
   };
 
   return (

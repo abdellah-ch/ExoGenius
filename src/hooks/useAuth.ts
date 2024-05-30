@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 const useAuthStateTeacher = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [teacherId, setTeacherId] = useState(null);
+  const [teacherId, setTeacherId] = useState(undefined);
 
   const navigate = useNavigate();
 
@@ -23,6 +23,10 @@ const useAuthStateTeacher = () => {
         body: JSON.stringify({ jwt: `${token}` }),
       }).then((res) => {
         if (res.status == 200) {
+          res.json().then((data) => {
+            setTeacherId(data.data.id);
+          });
+
           setIsLoading(false);
         } else {
           navigate("/");

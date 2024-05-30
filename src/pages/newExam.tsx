@@ -9,8 +9,14 @@ import { TbCircleNumber3 } from "react-icons/tb";
 import { useRef, useState } from "react";
 import { FaCircleCheck } from "react-icons/fa6";
 import { FaSave } from "react-icons/fa";
+import useAuthStateTeacher from "../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 const NewExam = () => {
+  const navigate = useNavigate();
+  const { teacherId } = useAuthStateTeacher();
+  console.log(teacherId);
+
   const TitleRef = useRef<HTMLInputElement>(null);
   // const result = await uploadFile(fileData, {
   //   publicKey: "YOUR_PUBLIC_KEY",
@@ -25,7 +31,7 @@ const NewExam = () => {
   //const [examTitle, setExamTitle] = useState<string>("");
   const [currentStep, setCurrentStep] = useState<number>(0);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
-  const [duration, setDuration] = useState<number | undefined>(undefined);
+  const [duration, setDuration] = useState<string | undefined>(undefined);
   const [subject, setSubject] = useState<string | null>(null);
   const [isLocked, setIsLocked] = useState<boolean>(false);
 
@@ -56,8 +62,45 @@ const NewExam = () => {
   // const handlePrev = () => {
   //   setCurrentStep((prevStep) => (prevStep - 1 + steps.length) % steps.length);
   // };
-  const handleSaveExam = () => {
-    console.log({ examTitle, uploadedFile, duration, subject, isLocked });
+  const handleSaveExam = async () => {
+    // console.log({ examTitle, uploadedFile, duration, subject, isLocked });
+    if (uploadedFile && duration && examTitle && subject && teacherId) {
+      const info = {
+        userId: teacherId,
+        duration: duration,
+        examTitle: examTitle,
+        isLocked: isLocked,
+        subject: subject,
+        pdf: uploadedFile,
+      };
+      console.log(info);
+
+      const res = await fetch("http://localhost/NewExam", {
+        method: "POST",
+        mode: "cors", // no-cors, *cors, same-origin
+        body: JSON.stringify(info),
+      });
+      console.log(res);
+
+      const data = await res.json();
+
+      // console.log(data.examKey);
+
+      const result = await fetch("http://localhost/uploadPdf", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/octet-stream",
+          "X-File-Name": data.examKey,
+        },
+        mode: "cors", // no-cors, *cors, same-origin
+        body: uploadedFile,
+      });
+      if (result.status === 200) {
+        navigate("/dashboard/ExamList");
+      } else {
+        console.log("error", result.status);
+      }
+    }
   };
   return (
     <div className=" bg-zinc-100  md:flex flex-col items-center p-4 w-[100%] mx-auto hidden">
