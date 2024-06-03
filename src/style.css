@@ -213,3 +213,7 @@ span.flatpickr-weekday,
 [x-cloak] {
   display: none !important;
 }
+
+.quill {
+  min-width: 50vh;
+}

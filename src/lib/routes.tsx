@@ -8,55 +8,60 @@ import LandingPage from "../pages/landing_page";
 import ExamLayout from "../components/templates/Exam_Layout";
 import ExamWorkspace from "../pages/exam_workspace";
 import LandingLayout from "../components/templates/LandingLayout";
+import Monitoring_result from "../pages/monitoring_result";
 //import TeacherLogin from "../pages/teacherlogin";
 const routes: RouteObject[] = [
-    {
+  {
+    path: "/dashboard",
+    element: <DashboardLayout />,
+    children: [
+      {
         path: "/dashboard",
-        element: <DashboardLayout />,
-        children: [
-            {
-                path: "/dashboard",
-                element: <Profile />
-            },
-            {
-                path: "/dashboard/newExam",
-                element: <NewExam />,
-            },
-            {
-                path: "/dashboard/ExamList",
-                element: <ExamList />,
-            },
-        ]
-    },
-    {
-        path: "/exam",
-        element: <ExamLayout />,
-        children: [
-            {
-                path: "/exam/:id",
-                element: <ExamWorkspace />
-            },
-        ]
-    },
-    {
+        element: <Profile />,
+      },
+      {
+        path: "/dashboard/newExam",
+        element: <NewExam />,
+      },
+      {
+        path: "/dashboard/ExamList",
+        element: <ExamList />,
+      },
+      {
+        path: "/dashboard/exams/:id",
+        element: <Monitoring_result />,
+      },
+    ],
+  },
+  {
+    path: "/exam",
+    element: <ExamLayout />,
+    children: [
+      {
+        path: "/exam/:id",
+        element: <ExamWorkspace />,
+      },
+    ],
+  },
+  {
+    path: "/",
+    element: <LandingLayout />,
+    children: [
+      {
         path: "/",
-        element: <LandingLayout />,
-        children: [
-            {
-                path: "/",
-                element: <LandingPage />
-            },
-        ]
-    },
+        element: <LandingPage />,
+      },
+    ],
+  },
 
-    /* {
+  /* {
         path: "/TeacherLogin",
         element: <TeacherLogin />,
     }, */
-    {
-        path: '*',
-        element: <Not_fount />
-    }
-]
+  {
+    path: "*",
+    element: <Not_fount />,
+  },
+];
 
 export default routes;

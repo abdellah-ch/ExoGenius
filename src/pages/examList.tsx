@@ -1,10 +1,33 @@
 // import { useState } from "react";
 import { IoDocumentAttach } from "react-icons/io5";
-import { FaPlus } from "react-icons/fa";
-import { NavLink } from "react-router-dom";
+import { FaEye, FaPlus } from "react-icons/fa";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import useAuthStateTeacher from "../hooks/useAuth";
 // import Loading from "../components/organisms/Loading";
+import { Button } from "../components/ui/button";
+import { FaDotCircle } from "react-icons/fa";
+import { FaPencilAlt } from "react-icons/fa";
+import { RiDeleteBin5Fill } from "react-icons/ri";
+import { FaShield } from "react-icons/fa6";
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../components/ui/select";
+
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../components/ui/table";
 
 interface ExamType {
   ExamKey: string;
@@ -21,7 +44,7 @@ function ExamList() {
   const [examList, setExamList] = useState<ExamType[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   console.log(examList);
-
+  const navigate = useNavigate();
   const { teacherId } = useAuthStateTeacher();
   useEffect(() => {
     if (teacherId) {
@@ -39,48 +62,98 @@ function ExamList() {
   }, [teacherId]);
 
   if (isLoading) {
-    return <></>;
+    return <div></div>;
   }
   if (examList.length > 0) {
     return (
       <div className="flex  justify-center md:h-auto bg-zinc-100 dark:bg-zinc-900 ">
-        <div className="w-full max-w-4xl  bg-white rounded-lg shadow-md dark:bg-zinc-800">
+        <div className="w-full max-w-4xl flex justify-center flex-col items-center  bg-white rounded-lg shadow-md dark:bg-zinc-800">
           <div className="bg-zinc-800 text-white  rounded-t-lg w-full p-6">
             <h1 className="text-center text-xl font-semibold">My Exams</h1>
           </div>
           {/* Header */}
-          <div className="flex justify-between items-center border-b pb-2 mb-2 p-2">
-            <div className="flex items-center space-x-2">
-              <input type="checkbox" className="form-checkbox" />
-              <a className="text-blue-600 dark:text-blue-400">Exam name</a>
-            </div>
-            <div className="flex items-center space-x-4">
-              <span>Exam key</span>
+          <Table className="text-ce">
+            <TableCaption>A list of your exams.</TableCaption>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="text-center ">Exam Key</TableHead>
+                <TableHead className="text-center ">Exam Name</TableHead>
+                <TableHead className="text-center ">Status</TableHead>
+                <TableHead className="text-center ">Access</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {examList.map((exam) =>
+                exam.ExamKey.length === 7 ? (
+                  <TableRow key={exam.ExamKey} className=" ">
+                    <TableCell className="font-medium text-center">
+                      {exam.ExamKey}
+                    </TableCell>
+                    <TableCell className="text-center">{exam.Title}</TableCell>
+                    <TableCell className="text-center">
+                      <FaShield className="text-xl m-auto" />
+                    </TableCell>
+                    <TableCell className="text-center">
+                      {/* {exam.IsLocked === "0" ? "Open" : "Closed"} */}
+                      <Select onValueChange={(val) => {}}>
+                        <SelectTrigger className=" text-left w-[50%] m-auto">
+                          <SelectValue
+                            placeholder={
+                              exam.IsLocked === "0" ? " Open" : "Closed"
+                            }
+                          />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Open">
+                            <div className="flex gap-2 items-center  justify-start p-2 pl-0">
+                              <FaDotCircle className="text-green-500 " />
+                              Open
+                            </div>
+                          </SelectItem>
+                          <SelectItem value="Closed">
+                            <div className="flex gap-2 items-center  justify-start p-2 pl-0">
+                              <FaDotCircle className="text-red-700" />
+                              Closed
+                            </div>
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex gap-4">
+                        <div className="p-2 border  rounded-xl cursor-pointer">
+                          <FaPencilAlt className="text-xl" />
+                        </div>
 
-              <span>Status</span>
-              <span>Access</span>
-            </div>
-          </div>
-          {/* loop throught ExamList and display them */}
-          {examList.map(
-            (exam) =>
-              exam.ExamKey.length === 7 && (
-                <div
-                  key={exam.ExamKey}
-                  className="flex justify-between items-center border-b p-2 mb-2 space-x-2"
-                >
-                  <div className="flex items-center space-x-2">
-                    <input type="checkbox" className="form-checkbox" />
-                    <span>{exam.Title}</span>
-                  </div>
-                  <div className="space-x-4">
-                    <span>{exam.ExamKey}</span>
-                    <span> true</span>
-                    <span>{exam.IsLocked === "0" ? "Closed" : "Open"}</span>
-                  </div>
-                </div>
-              )
-          )}
+                        <div
+                          className=" p-2 border  rounded-xl cursor-pointer"
+                          onClick={() => {
+                            navigate(`/dashboard/exams/${exam.ExamKey}`);
+                          }}
+                        >
+                          <FaEye className="text-xl" />
+                        </div>
+
+                        <div className=" p-2 border  rounded-xl cursor-pointer">
+                          <RiDeleteBin5Fill className="text-xl" />
+                        </div>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ) : null
+              )}
+            </TableBody>
+          </Table>
+
+          <Button
+            className="mt-10 mb-6 rounded-full"
+            onClick={() => {
+              navigate("/dashboard/NewExam");
+            }}
+          >
+            {" "}
+            Add new Exam{" "}
+          </Button>
           {/* loop throught ExamList and display them*/}
         </div>
       </div>

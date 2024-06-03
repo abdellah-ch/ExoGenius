@@ -9,7 +9,7 @@ import useAuthStateTeacher from "../../hooks/useAuth";
 const DashboardLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
 
-  const { isLoading, teacherId } = useAuthStateTeacher();
+  const { isLoading } = useAuthStateTeacher();
 
   if (isLoading) {
     return <Loading />;
@@ -21,7 +21,7 @@ const DashboardLayout = () => {
       <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
         <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
         <main className="bg-zinc-100">
-          <div className="mx-auto w-[80vw] -2xl p-4  2xl:p-10 min-h-[90vh] h-[100%] bg-zinc-100">
+          <div className="mx-auto w-[80vw] -2xl p-4  2xl:p-10 min-h-[92vh] h-[100%] bg-zinc-100">
             <Outlet />
           </div>
         </main>
