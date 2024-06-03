@@ -43,9 +43,22 @@ interface ExamType {
 function ExamList() {
   const [examList, setExamList] = useState<ExamType[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  console.log(examList);
+  // console.log(examList);
+
   const navigate = useNavigate();
   const { teacherId } = useAuthStateTeacher();
+
+  const handelDelete = (examKey: string) => {
+    setIsLoading(true);
+    fetch("http://localhost/deleteExam", {
+      method: "POST",
+      mode: "cors", // no-cors, *cors, same-origin
+      body: JSON.stringify({ ExamKey: examKey }),
+    }).then((response) => {
+      console.log(response);
+    });
+    setIsLoading(false);
+  };
   useEffect(() => {
     if (teacherId) {
       fetch("http://localhost/ExamList", {
@@ -59,12 +72,12 @@ function ExamList() {
         });
       });
     }
-  }, [teacherId]);
+  }, [teacherId, examList, isLoading]);
 
   if (isLoading) {
     return <div></div>;
   }
-  if (examList.length > 0) {
+  if (examList.length > 0 && teacherId) {
     return (
       <div className="flex  justify-center md:h-auto bg-zinc-100 dark:bg-zinc-900 ">
         <div className="w-full max-w-4xl flex justify-center flex-col items-center  bg-white rounded-lg shadow-md dark:bg-zinc-800">
@@ -96,10 +109,12 @@ function ExamList() {
                     <TableCell className="text-center">
                       {/* {exam.IsLocked === "0" ? "Open" : "Closed"} */}
                       <Select onValueChange={(val) => {}}>
-                        <SelectTrigger className=" text-left w-[50%] m-auto">
+                        <SelectTrigger className=" text-left w-[70%] m-auto">
                           <SelectValue
                             placeholder={
-                              exam.IsLocked === "0" ? " Open" : "Closed"
+                              exam.IsLocked.toString() === "0"
+                                ? "Closed"
+                                : "Open"
                             }
                           />
                         </SelectTrigger>
@@ -135,7 +150,12 @@ function ExamList() {
                         </div>
 
                         <div className=" p-2 border  rounded-xl cursor-pointer">
-                          <RiDeleteBin5Fill className="text-xl" />
+                          <RiDeleteBin5Fill
+                            className="text-xl"
+                            onClick={() => {
+                              handelDelete(exam.ExamKey);
+                            }}
+                          />
                         </div>
                       </div>
                     </TableCell>

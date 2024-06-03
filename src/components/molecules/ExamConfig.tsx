@@ -46,8 +46,8 @@ interface StepProps {
   setDuration: React.Dispatch<React.SetStateAction<string | undefined>>;
   subject: string | null;
   setSubject: React.Dispatch<React.SetStateAction<string | null>>;
-  isLocked: boolean;
-  setIsLocked: React.Dispatch<React.SetStateAction<boolean>>;
+  isLocked: number | undefined;
+  setIsLocked: React.Dispatch<React.SetStateAction<number | undefined>>;
 }
 
 function ExamConfig(props: StepProps) {
@@ -114,7 +114,9 @@ function ExamConfig(props: StepProps) {
                       checked={field.value}
                       onCheckedChange={(checked) => {
                         field.onChange(checked);
-                        setIsTimeLimitEnabled(checked);
+                        checked
+                          ? setIsTimeLimitEnabled(1)
+                          : setIsTimeLimitEnabled(0);
                       }}
                     />
                   </FormControl>
@@ -156,7 +158,6 @@ function ExamConfig(props: StepProps) {
                   <div className="space-y-0.5">
                     <FormLabel className="text-base">Exam access</FormLabel>
                     <FormDescription>
-                      {" "}
                       Enable or disable Exam access
                     </FormDescription>
                   </div>
@@ -166,8 +167,11 @@ function ExamConfig(props: StepProps) {
                       onCheckedChange={(checked) => {
                         field.onChange(checked);
                         console.log(checked);
-
-                        props.setIsLocked(checked);
+                        if (checked) {
+                          props.setIsLocked(0);
+                        } else {
+                          props.setIsLocked(1);
+                        }
                       }}
                     />
                   </FormControl>

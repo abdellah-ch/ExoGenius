@@ -5,6 +5,7 @@ import image2 from "/upload.jpg";
 interface StepProps {
   currentStep: number;
   setCurrentStep: React.Dispatch<React.SetStateAction<number>>;
+  setState: React.Dispatch<React.SetStateAction<number>>;
 }
 const StepOne = (props: StepProps) => {
   return (
@@ -19,6 +20,7 @@ const StepOne = (props: StepProps) => {
         <div
           onClick={() => {
             props.setCurrentStep(2);
+            props.setState(0);
           }}
           className="cursor-pointer relative p-6 bg-white dark:bg-zinc-900 border lg:h-[250px] h-[200px] border-zinc-200 dark:border-zinc-700 rounded-lg shadow-sm w-[40%]"
         >
@@ -37,6 +39,7 @@ const StepOne = (props: StepProps) => {
         <div
           onClick={() => {
             props.setCurrentStep(1);
+            props.setState(1);
           }}
           className=" cursor-pointer relative p-6 bg-white dark:bg-zinc-900 border lg:h-[250px] h-[200px]  border-zinc-200 dark:border-zinc-700 rounded-lg shadow-sm w-[40%]"
         >

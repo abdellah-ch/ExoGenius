@@ -10,6 +10,8 @@ function ExamWorkspace() {
   const location = useLocation();
   const pathname = location.pathname;
   const ExamKey = pathname.split("/")[2];
+  const [state, setState] = useState<string>("");
+  console.log(state);
 
   //   console.log(ExamKey);
 
@@ -30,8 +32,13 @@ function ExamWorkspace() {
         SetIsExamKeyCorrect(false);
       }
       if (res.status == 200) {
-        SetIsLoading(false);
         SetIsExamKeyCorrect(true);
+        const data = await res.json();
+        console.log(data);
+
+        setState(data.State);
+
+        SetIsLoading(false);
       }
     };
     CheckExam();
@@ -42,7 +49,7 @@ function ExamWorkspace() {
   } else if (!IsLoading && !IsExamKeyCorrect) {
     return <ExamNotFound />;
   } else if (!IsLoading && IsExamKeyCorrect) {
-    return <ExamSpaceComponent />;
+    return <ExamSpaceComponent State={state} />;
   }
 }
 

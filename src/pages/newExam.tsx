@@ -33,17 +33,29 @@ const NewExam = () => {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [duration, setDuration] = useState<string | undefined>(undefined);
   const [subject, setSubject] = useState<string | null>(null);
-  const [isLocked, setIsLocked] = useState<boolean>(false);
+  const [isLocked, setIsLocked] = useState<number | undefined>(0);
+  // console.log(isLocked?.toString());
+
+  const [state, setState] = useState<number>(0);
+  console.log(state);
+
+  const [EditorValue, setEditorValue] = useState<string>("");
+
+  console.log(EditorValue);
 
   const steps = [
-    <StepOne currentStep={currentStep} setCurrentStep={setCurrentStep} />,
+    <StepOne
+      currentStep={currentStep}
+      setCurrentStep={setCurrentStep}
+      setState={setState}
+    />,
     <Upload
       currentStep={currentStep}
       setCurrentStep={setCurrentStep}
       setUploadedFile={setUploadedFile}
       uploadedFile={uploadedFile}
     />,
-    <WriteExam />,
+    <WriteExam setEditorValue={setEditorValue} />,
     <ExamConfig
       duration={duration}
       setDuration={setDuration}
@@ -54,9 +66,9 @@ const NewExam = () => {
     />,
   ];
 
-  // const handleNext = () => {
-  //   setCurrentStep((prevStep) => (prevStep + 1) % steps.length);
-  // };
+  const handleNext = () => {
+    setCurrentStep((prevStep) => (prevStep + 1) % steps.length);
+  };
 
   // // Function to go to the previous component
   // const handlePrev = () => {
@@ -64,41 +76,71 @@ const NewExam = () => {
   // };
   const handleSaveExam = async () => {
     // console.log({ examTitle, uploadedFile, duration, subject, isLocked });
-    if (uploadedFile && duration && examTitle && subject && teacherId) {
+    if (
+      duration &&
+      examTitle &&
+      subject &&
+      teacherId &&
+      (uploadedFile || EditorValue)
+    ) {
       const info = {
         userId: teacherId,
         duration: duration,
         examTitle: examTitle,
-        isLocked: isLocked,
+        isLocked: isLocked?.toString(),
         subject: subject,
-        pdf: uploadedFile,
+        state: state,
       };
-      console.log(info);
+
+      // console.log(info);
 
       const res = await fetch("http://localhost/NewExam", {
         method: "POST",
         mode: "cors", // no-cors, *cors, same-origin
         body: JSON.stringify(info),
       });
-      console.log(res);
+      // console.log(res);
 
       const data = await res.json();
 
-      // console.log(data.examKey);
+      console.log(data);
 
-      const result = await fetch("http://localhost/uploadPdf", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/octet-stream",
-          "X-File-Name": data.examKey,
-        },
-        mode: "cors", // no-cors, *cors, same-origin
-        body: uploadedFile,
-      });
-      if (result.status === 200) {
+      // console.log(data.examKey);
+      if (data.state === 1) {
+        const result = await fetch("http://localhost/uploadPdf", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/octet-stream",
+            "X-File-Name": data.examKey,
+          },
+          mode: "cors", // no-cors, *cors, same-origin
+          body: uploadedFile,
+        });
+        if (result.status === 200) {
+          navigate("/dashboard/ExamList");
+        } else {
+          console.log("error", result.status);
+        }
+      } else if (data.state === 0) {
+        //insert the exam value into the database ExamText
+        console.log(EditorValue);
+        console.log(data);
+
+        const send = {
+          ExamKey: data.examKey,
+          Text: EditorValue,
+        };
+        const res = await fetch("http://localhost/ExamText", {
+          method: "POST",
+          mode: "cors", // no-cors, *cors, same-origin
+          body: JSON.stringify(send),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        const alo = await res.json();
+        console.log(alo);
         navigate("/dashboard/ExamList");
-      } else {
-        console.log("error", result.status);
       }
     }
   };
@@ -145,7 +187,7 @@ const NewExam = () => {
               </button>
             ) : (
               <button
-                onClick={() => {}}
+                onClick={handleNext}
                 className="bg-zinc-400 dark:bg-zinc-600 text-white px-8 font-bold py-2 rounded-full flex items-center"
               >
                 Next
