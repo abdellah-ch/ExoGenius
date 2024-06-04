@@ -136,7 +136,7 @@ const TakeExam = ({
               <FaRocketchat /> Chat
             </p>
           </div>
-          <div className="w-full  p-2  cursor-pointer hover:bg-gray-400">
+          <div className="w-[80%] rounded-xl border  mx-auto mt-3  p-2  cursor-pointer hover:bg-gray-400">
             <p className="flex items-center  gap-2 text-xl">
               {" "}
               <FaRegCalendarCheck /> Submit Exam
@@ -144,9 +144,8 @@ const TakeExam = ({
           </div>
 
           {/* Exam Time remaining */}
-          <div className="xl:w-[15%] lg:w-[25%] md:w-[25%] p-4 absolute bottom-0  text-center ">
+          <div className="xl:w-[15%] lg:w-[25%] md:w-[25%] p-4 absolute bottom-0  text-center">
             <p className="flex justify-center items-center gap-2 text-xl">
-              {" "}
               <FaClock />
               {formatTime(time.hour)}:{formatTime(time.minute)}
             </p>

@@ -2,16 +2,24 @@
 //if not display a form
 //if yes show the exam
 import Loading from "./Loading.tsx";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import TakeExam from "./TakeExam.tsx";
-const ExamSpaceComponent = (props: { State: string; Subject: string }) => {
+const ExamSpaceComponent = (props: {
+  State: string;
+  Subject: string;
+  ExamKey: string;
+}) => {
   const [IsLoading, SetIsLoading] = useState<boolean>(true);
   const [StudentId, SetStudentId] = useState<string | undefined>(undefined);
   const [StudentName, SetStudentName] = useState<string | undefined>(undefined);
   const [IsStudentExist, SetIsStudentExist] = useState<boolean>(false);
 
+  const NameRef = useRef<HTMLInputElement>(null);
+  const IdRef = useRef<HTMLInputElement>(null);
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    SetIsLoading(true);
     const form = e.currentTarget;
     const name = form.elements.namedItem("name") as HTMLInputElement;
     const id = form.elements.namedItem("id") as HTMLInputElement;
@@ -21,6 +29,21 @@ const ExamSpaceComponent = (props: { State: string; Subject: string }) => {
     }
     localStorage.setItem("StudentName", name.value);
     localStorage.setItem("StudentId", id.value);
+    //push the name and id to the database
+    const info = {
+      Name: name.value,
+      Id: id.value,
+      ExamKey: props.ExamKey,
+    };
+    fetch("http://localhost/TakeExamStudent", {
+      method: "POST",
+      mode: "cors", // no-cors, *cors, same-origin
+      body: JSON.stringify(info),
+    }).then((response) => {
+      console.log(response);
+
+      SetIsLoading(false);
+    });
   };
 
   useEffect(() => {
@@ -34,7 +57,7 @@ const ExamSpaceComponent = (props: { State: string; Subject: string }) => {
       SetIsStudentExist(false);
     }
     SetIsLoading(false);
-  }, [StudentId, StudentName]);
+  }, [StudentId, StudentName, IsLoading]);
 
   if (IsLoading) {
     return <Loading />;
@@ -51,6 +74,7 @@ const ExamSpaceComponent = (props: { State: string; Subject: string }) => {
         <form onSubmit={handleSubmit} className="w-full max-w-sm">
           <div className="mb-4">
             <input
+              ref={NameRef}
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               type="text"
               name="name"
@@ -59,6 +83,7 @@ const ExamSpaceComponent = (props: { State: string; Subject: string }) => {
           </div>
           <div className="mb-6">
             <input
+              ref={IdRef}
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
               type="text"
               name="id"

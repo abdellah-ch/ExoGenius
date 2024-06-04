@@ -50,7 +50,9 @@ function ExamWorkspace() {
   } else if (!IsLoading && !IsExamKeyCorrect) {
     return <ExamNotFound />;
   } else if (!IsLoading && IsExamKeyCorrect) {
-    return <ExamSpaceComponent State={state} Subject={subject} />;
+    return (
+      <ExamSpaceComponent State={state} Subject={subject} ExamKey={ExamKey} />
+    );
   }
 }
 
