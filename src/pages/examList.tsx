@@ -56,6 +56,9 @@ function ExamList() {
       body: JSON.stringify({ ExamKey: examKey }),
     }).then((response) => {
       console.log(response);
+      response.json().then((data) => {
+        console.log(data);
+      });
     });
     setIsLoading(false);
   };
@@ -149,13 +152,13 @@ function ExamList() {
                           <FaEye className="text-xl" />
                         </div>
 
-                        <div className=" p-2 border  rounded-xl cursor-pointer">
-                          <RiDeleteBin5Fill
-                            className="text-xl"
-                            onClick={() => {
-                              handelDelete(exam.ExamKey);
-                            }}
-                          />
+                        <div
+                          onClick={() => {
+                            handelDelete(exam.ExamKey);
+                          }}
+                          className=" p-2 border  rounded-xl cursor-pointer"
+                        >
+                          <RiDeleteBin5Fill className="text-xl" />
                         </div>
                       </div>
                     </TableCell>

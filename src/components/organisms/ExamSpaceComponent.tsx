@@ -4,7 +4,7 @@
 import Loading from "./Loading.tsx";
 import { useState, useEffect } from "react";
 import TakeExam from "./TakeExam.tsx";
-const ExamSpaceComponent = (props: { State: string }) => {
+const ExamSpaceComponent = (props: { State: string; Subject: string }) => {
   const [IsLoading, SetIsLoading] = useState<boolean>(true);
   const [StudentId, SetStudentId] = useState<string | undefined>(undefined);
   const [StudentName, SetStudentName] = useState<string | undefined>(undefined);
@@ -83,6 +83,7 @@ const ExamSpaceComponent = (props: { State: string }) => {
         studentId={StudentId!}
         studentName={StudentName!}
         State={props.State}
+        Subject={props.Subject}
       />
     </div>
   );

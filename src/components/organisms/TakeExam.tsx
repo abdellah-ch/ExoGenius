@@ -10,17 +10,49 @@ import Split from "react-split";
 import ReactCodeMirror from "@uiw/react-codemirror";
 import { loadLanguage } from "@uiw/codemirror-extensions-langs";
 import { Document, Page } from "react-pdf";
+import Editor from "quill-editor-math";
+import "quill-editor-math/dist/index.css";
 import { useEffect, useState } from "react";
 import Loading from "./Loading";
 const TakeExam = ({
   studentId,
   studentName,
   State,
+  Subject,
 }: {
   studentId: string;
   studentName: string;
   State: string;
+  Subject: string;
 }) => {
+  const [time, setTime] = useState({
+    hour: new Date().getHours(),
+    minute: new Date().getMinutes(),
+  });
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const now = new Date();
+      const newHour = now.getHours();
+      const newMinute = now.getMinutes();
+
+      setTime((prevTime) => {
+        if (prevTime.hour !== newHour || prevTime.minute !== newMinute) {
+          return {
+            hour: newHour,
+            minute: newMinute,
+          };
+        }
+        return prevTime;
+      });
+    }, 1000); // Check every second for better accuracy
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const formatTime = (timeUnit: any) =>
+    timeUnit < 10 ? `0${timeUnit}` : timeUnit;
+
   const [IsLoading, SetIsLoading] = useState<boolean>(true);
   const [ExamText, setExamText] = useState<string>();
   const [pdf, setPdf] = useState<string>();
@@ -115,7 +147,8 @@ const TakeExam = ({
           <div className="xl:w-[15%] lg:w-[25%] md:w-[25%] p-4 absolute bottom-0  text-center ">
             <p className="flex justify-center items-center gap-2 text-xl">
               {" "}
-              <FaClock /> 00:00
+              <FaClock />
+              {formatTime(time.hour)}:{formatTime(time.minute)}
             </p>
           </div>
         </div>
@@ -137,8 +170,8 @@ const TakeExam = ({
                 </div>
               )}
             </div>
-            <div className="border-2 border-black bg-blue-500 h-[100vh] overflow-auto">
-              {
+            <div className="border-2 border-black bg-blue-100 h-[100vh] overflow-auto">
+              {Subject === "Programming" ? (
                 <ReactCodeMirror
                   className="h-full"
                   value={"//Code Here \n const"}
@@ -147,7 +180,9 @@ const TakeExam = ({
                   onChange={() => {}}
                   extensions={[loadLanguage("javascript")!]}
                 />
-              }
+              ) : (
+                <Editor initialValue="" onChange={(value) => {}} />
+              )}
             </div>
           </Split>
         </div>
