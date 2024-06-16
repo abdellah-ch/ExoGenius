@@ -43,12 +43,35 @@ const useProviderAuth = () => {
     });
   };
 
+  const register = (RegisterData: {
+    userName: string;
+    email: string;
+    password: string;
+  }) => {
+    fetch("http://localhost/Register", {
+      method: "POST",
+      mode: "cors",
+      body: JSON.stringify({
+        userName: RegisterData.userName,
+        email: RegisterData.email,
+        password: RegisterData.password,
+      }),
+    }).then((res) => {
+      if (res.status === 200) {
+        toast({
+          title: "account created",
+        });
+      }
+    });
+  };
+
   const logout = () => {
     Cookies.remove("token");
     navigate("/");
   };
   return {
     Login,
+    register,
     logout,
   };
 };

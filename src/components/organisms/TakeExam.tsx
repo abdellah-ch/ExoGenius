@@ -14,6 +14,18 @@ import Editor from "quill-editor-math";
 import "quill-editor-math/dist/index.css";
 import { useEffect, useState } from "react";
 import Loading from "./Loading";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "../ui/alert-dialog";
+import { useNavigate } from "react-router-dom";
 const TakeExam = ({
   studentId,
   studentName,
@@ -52,12 +64,34 @@ const TakeExam = ({
 
   const formatTime = (timeUnit: any) =>
     timeUnit < 10 ? `0${timeUnit}` : timeUnit;
-
+  const navigate = useNavigate();
   const [IsLoading, SetIsLoading] = useState<boolean>(true);
   const [ExamText, setExamText] = useState<string>();
   const [pdf, setPdf] = useState<string>();
   const pathname = location.pathname;
   const ExamKey = pathname.split("/")[2];
+  const [studentAnswers, SetStudentAnswers] = useState<string>("");
+  const [IsModel, SetIsModel] = useState<boolean>(false);
+  const handelsumbit = () => {
+    SetIsLoading(true);
+    const info = {
+      ExamKey: ExamKey,
+      StudentId: studentId,
+      Value: studentAnswers,
+    };
+    fetch("http://localhost/SubmitStudentAnswer", {
+      method: "POST",
+      mode: "cors", // no-cors, *cors, same-origin
+      body: JSON.stringify(info),
+    }).then((response) => {
+      console.log(response);
+      SetIsLoading(false);
+    });
+    localStorage.removeItem("StudentName");
+    localStorage.removeItem("StudentId");
+    // Update the status to Submited and submited websocket to node js server
+    navigate("/");
+  };
   useEffect(() => {
     const fetchPdf = async () => {
       try {
@@ -118,6 +152,32 @@ const TakeExam = ({
   if (IsLoading === false) {
     return (
       <div className="flex w-full h-full">
+        {/* Model */}
+        {IsModel ? (
+          <AlertDialog open>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone. your exam will Submited
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel
+                  onClick={() => {
+                    SetIsModel(false);
+                  }}
+                >
+                  Cancel
+                </AlertDialogCancel>
+                <AlertDialogAction onClick={handelsumbit}>
+                  Continue
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        ) : null}
+        {/* Model */}
         {/* SildeBar */}
         <div className="hidden sm:block text-white  xl:w-[15%] lg:w-[25%] md:w-[25%]  h-full bg-[#1d3461]">
           <div className="flex flex-col items-center justify-center text-2xl font-bold bg-[#829cbc] text-black">
@@ -137,7 +197,12 @@ const TakeExam = ({
             </p>
           </div>
           <div className="w-[80%] rounded-xl border  mx-auto mt-3  p-2  cursor-pointer hover:bg-gray-400">
-            <p className="flex items-center  gap-2 text-xl">
+            <p
+              onClick={() => {
+                SetIsModel(true);
+              }}
+              className="flex items-center  gap-2 text-xl"
+            >
               {" "}
               <FaRegCalendarCheck /> Submit Exam
             </p>
@@ -176,11 +241,18 @@ const TakeExam = ({
                   value={"//Code Here \n const"}
                   height="100%"
                   width="100%"
-                  onChange={() => {}}
+                  onChange={(value) => {
+                    SetStudentAnswers(value);
+                  }}
                   extensions={[loadLanguage("javascript")!]}
                 />
               ) : (
-                <Editor initialValue="" onChange={(value) => {}} />
+                <Editor
+                  initialValue=""
+                  onChange={(value) => {
+                    SetStudentAnswers(value);
+                  }}
+                />
               )}
             </div>
           </Split>

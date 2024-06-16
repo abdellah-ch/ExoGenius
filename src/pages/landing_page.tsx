@@ -6,13 +6,44 @@ import useProviderAuth from "../hooks/useProviderAuth";
 // import { useToast } from "../components/ui/use-toast";
 import SectionFeatures from "../components/molecules/SectionFeatures";
 
+import { useToast } from "../components/ui/use-toast";
 function LandingPage() {
   const [openModal, setOpenModal] = useState(false);
   const emailInputRef = useRef<HTMLInputElement>(null);
+
+  const UserNameRef = useRef<HTMLInputElement>(null);
   const passwordInputRef = useRef<HTMLInputElement>(null);
+
+  const confirmPasswordInputRef = useRef<HTMLInputElement>(null);
   const [openModelRegister, setOpenModelRegister] = useState(false);
 
-  const { Login } = useProviderAuth();
+  const { toast } = useToast();
+  const { Login, register } = useProviderAuth();
+
+  const handelRegister = () => {
+    const email = emailInputRef.current?.value || "";
+    const userName = UserNameRef.current?.value || "";
+    const password = passwordInputRef.current?.value || "";
+    const confirmPassword = confirmPasswordInputRef.current?.value || "";
+    console.log(password);
+    console.log(confirmPassword);
+
+    if (password != confirmPassword) {
+      toast({
+        title: "please verify your password",
+      });
+    } else {
+      const RegisterData = {
+        userName,
+        email,
+        password,
+      };
+      register(RegisterData);
+      setOpenModal(true);
+      setOpenModelRegister(false);
+    }
+    // const LoginData = { email, password };
+  };
 
   const handleLogin = () => {
     const email = emailInputRef.current?.value || "";
@@ -104,9 +135,22 @@ function LandingPage() {
             </h3>
             <div>
               <div className="mb-2 block">
+                <Label htmlFor="UserName" value="Your UserName" />
+              </div>
+              <TextInput
+                autoComplete="off"
+                id="UserName"
+                ref={UserNameRef}
+                placeholder="name"
+                required
+              />
+            </div>
+            <div>
+              <div className="mb-2 block">
                 <Label htmlFor="email" value="Your email" />
               </div>
               <TextInput
+                autoComplete="off"
                 id="email"
                 ref={emailInputRef}
                 placeholder="name@company.com"
@@ -117,16 +161,26 @@ function LandingPage() {
               <div className="mb-2 block">
                 <Label htmlFor="password" value="Your password" />
               </div>
-              <TextInput id="password" type="password" required />
+              <TextInput
+                id="password"
+                type="password"
+                required
+                ref={passwordInputRef}
+              />
             </div>
             <div>
               <div className="mb-2 block">
                 <Label htmlFor="password" value="Confirm Your password" />
               </div>
-              <TextInput id="ConfirmPassword" type="ConfirmPassword" required />
+              <TextInput
+                ref={confirmPasswordInputRef}
+                id="ConfirmPassword"
+                type="password"
+                required
+              />
             </div>
             <div className="w-full">
-              <Button>Create your account</Button>
+              <Button onClick={handelRegister}>Create your account</Button>
             </div>
             <div className="flex justify-between text-sm font-medium text-gray-500 dark:text-gray-300">
               Already have an account?&nbsp;
