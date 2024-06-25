@@ -29,7 +29,7 @@ function Menu({ sidebarOpen, setSidebarOpen }: SidebarProps) {
       {/* Nav BarHeader*/}
       <div className=" items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
         <NavLink to="/" className="flex">
-          <img src={Logo} alt="Logo" width={190} />
+          <img src={Logo} alt="Logo" width={150} />
         </NavLink>
 
         <button
