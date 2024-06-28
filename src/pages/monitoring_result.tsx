@@ -6,6 +6,8 @@ import { NavLink, useLocation } from "react-router-dom";
 import Overview from "../components/organisms/Overview";
 import Taking from "../components/organisms/Taking";
 import Submited from "../components/organisms/Submited";
+import { MdOutlineMessage } from "react-icons/md";
+import { IoIosSend } from "react-icons/io";
 
 const Monitoring_result = () => {
   const { pathname } = useLocation();
@@ -15,6 +17,9 @@ const Monitoring_result = () => {
   const [componetState, setComponetState] = useState<string>("overview");
   const [selectedSubmitStudent, setSelectedSubmitStudent] = useState<any>();
   const [examInfo, setExamInfo] = useState<any>();
+
+  console.log(selectedSubmitStudent);
+
   const fetchExamInfo = async () => {
     const info = {
       ExamKey: pathname.split("/")[3],
@@ -29,6 +34,7 @@ const Monitoring_result = () => {
     // console.log(data);
     setExamInfo(data);
   };
+
   const fetchTakingStudent = async () => {
     const info = {
       ExamKey: pathname.split("/")[3],
@@ -96,7 +102,10 @@ const Monitoring_result = () => {
             <div
               className="cursor-pointer hover:bg-white rounded-lg"
               key={index}
-              onClick={() => setComponetState("taking")}
+              onClick={() => {
+                setSelectedSubmitStudent(item);
+                setComponetState("taking");
+              }}
             >
               <p>{item.FullName}</p>
             </div>
@@ -129,13 +138,50 @@ const Monitoring_result = () => {
             SubmitCount={submitedList.length}
           />
         ) : componetState === "taking" ? (
-          <Taking />
+          <Taking selectedStudent={selectedSubmitStudent} />
         ) : (
           <Submited selectedStudent={selectedSubmitStudent} />
         )}
         {/* state to hold the component to show then if else it Xd mad ? */}
       </div>
-      <div className="w-[20%]">{/* Chat with student  */} Chat</div>
+      {componetState != "overview" && (
+        <div className="w-[20%]">
+          {/* Chat with student  */}
+
+          <div className="max-w-xs mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
+            <div className="bg-orange-500 p-4 flex items-center justify-center gap-3">
+              <MdOutlineMessage className="text-white text-xl mt-1" />
+
+              <span className="text-white font-semibold">
+                {selectedSubmitStudent?.FullName}
+              </span>
+            </div>
+            <div className="p-4 text-center">
+              {selectedSubmitStudent.Status === "submitted" ? (
+                <p className="p-8 text-gray-600">
+                  the student has submitted their exam
+                </p>
+              ) : (
+                <p className="text-zinc-700 mb-4">
+                  Note that messages only reach the receiver if they are
+                  currently in the exam view
+                </p>
+              )}
+
+              <div className="flex  items-center justify-center bg-gray">
+                <Input
+                  className="bg-transparent ring-0"
+                  placeholder="write your message"
+                  disabled={
+                    selectedSubmitStudent.Status === "submitted" ? true : false
+                  }
+                />
+                <IoIosSend className="text-2xl cursor-pointer mr-1" />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

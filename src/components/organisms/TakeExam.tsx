@@ -12,8 +12,10 @@ import { loadLanguage } from "@uiw/codemirror-extensions-langs";
 import { Document, Page } from "react-pdf";
 import Editor from "quill-editor-math";
 import "quill-editor-math/dist/index.css";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Loading from "./Loading";
+import Draggable from "react-draggable";
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,6 +28,8 @@ import {
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
 import { useNavigate } from "react-router-dom";
+import { IoClose } from "react-icons/io5";
+import { MdMessage } from "react-icons/md";
 const TakeExam = ({
   studentId,
   studentName,
@@ -41,6 +45,8 @@ const TakeExam = ({
     hour: new Date().getHours(),
     minute: new Date().getMinutes(),
   });
+
+  const [showChat, setShowChat] = useState<boolean>(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -72,6 +78,32 @@ const TakeExam = ({
   const ExamKey = pathname.split("/")[2];
   const [studentAnswers, SetStudentAnswers] = useState<string>("");
   const [IsModel, SetIsModel] = useState<boolean>(false);
+  const [teacherSubmited, setTeacherSubmited] = useState<boolean>(false);
+
+  const checkTeacherSubmited = async () => {
+    const info = {
+      ExamKey: ExamKey,
+      StudentId: studentId,
+    };
+    const res = await fetch("http://localhost/CheckTeacherSubmited", {
+      method: "POST",
+      mode: "cors",
+      body: JSON.stringify(info),
+    });
+
+    const data = await res.json();
+
+    if (data.TeacherSubmitted) {
+      setTeacherSubmited(true);
+    }
+  };
+  useEffect(() => {
+    checkTeacherSubmited(); // Initial fetch
+    const interval = setInterval(checkTeacherSubmited, 5000); // Fetch every 5 seconds
+
+    return () => clearInterval(interval); // Cleanup interval on component unmount
+  }, [ExamKey, studentId]);
+
   const handelsumbit = () => {
     SetIsLoading(true);
     const info = {
@@ -92,6 +124,12 @@ const TakeExam = ({
     // Update the status to Submited and submited websocket to node js server
     navigate("/");
   };
+  useEffect(() => {
+    if (teacherSubmited) {
+      handelsumbit();
+    }
+  }, [teacherSubmited, handelsumbit]);
+
   useEffect(() => {
     const fetchPdf = async () => {
       try {
@@ -145,13 +183,68 @@ const TakeExam = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  const eventLogger = useCallback((e: any, data: any) => {
+    console.log("Event: ", e);
+    console.log("Data: ", data);
+  }, []);
+
+  const handleStart = useCallback(eventLogger, []);
+  const handleDrag = useCallback(eventLogger, []);
+  const handleStop = useCallback(eventLogger, []);
   if (IsLoading === true) {
     return <Loading />;
   }
 
   if (IsLoading === false) {
     return (
-      <div className="flex w-full h-full">
+      <div className="flex w-full h-full" id="exam">
+        {showChat && (
+          <Draggable
+            axis="both"
+            handle=".handle"
+            defaultPosition={{ x: 0, y: 0 }}
+            grid={[25, 25]}
+            scale={1}
+            onStart={handleStart}
+            onDrag={handleDrag}
+            onStop={handleStop}
+          >
+            <div className="absolute bottom-0 right-0 z-999999">
+              <div className="handle cursor-move">Drag from here</div>
+              {/* past  */}
+              <div className="max-w-sm mx-auto border rounded-lg shadow-lg">
+                <div className="bg-orange-500 text-white flex items-center justify-between p-2 rounded-t-lg">
+                  <div className="flex items-center">
+                    <MdMessage />
+
+                    <span>Teacher chat</span>
+                  </div>
+                  <button
+                    className="text-white"
+                    onClick={() => {
+                      setShowChat(false);
+                    }}
+                  >
+                    <IoClose />
+                  </button>
+                </div>
+                <div className="p-4">
+                  <p className="text-muted-foreground">
+                    Note that messages only reach the receiver if they are
+                    currently in the exam view.
+                  </p>
+                </div>
+                <div className="border-t p-2">
+                  <input
+                    type="text"
+                    placeholder="Type here"
+                    className="w-full p-2 border rounded-lg"
+                  />
+                </div>
+              </div>
+            </div>
+          </Draggable>
+        )}
         {/* Model */}
         {IsModel ? (
           <AlertDialog open>
@@ -190,7 +283,10 @@ const TakeExam = ({
               <FaPenNib /> Show Exam
             </p>
           </div>
-          <div className="w-full  p-2  cursor-pointer hover:bg-gray-400">
+          <div
+            className="w-full  p-2  cursor-pointer hover:bg-gray-400"
+            onClick={() => setShowChat((pre) => !pre)}
+          >
             <p className="flex items-center  gap-2 text-xl">
               {" "}
               <FaRocketchat /> Chat
@@ -203,7 +299,6 @@ const TakeExam = ({
               }}
               className="flex items-center  gap-2 text-xl"
             >
-              {" "}
               <FaRegCalendarCheck /> Submit Exam
             </p>
           </div>

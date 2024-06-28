@@ -14,8 +14,6 @@ function ExamWorkspace() {
   const [subject, setSubject] = useState<string>("");
   console.log(state);
 
-  //   console.log(ExamKey);
-
   useEffect(() => {
     const CheckExam = async () => {
       SetIsLoading(true);

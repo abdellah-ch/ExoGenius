@@ -65,8 +65,8 @@ const ExamSpaceComponent = (props: {
   }
   if (!IsStudentExist && !IsLoading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-        <h1 className="text-3xl font-bold text-gray-800 mb-4">
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 ">
+        <h1 className="text-3xl font-bold text-gray-800 mb-4 ">
           Welcome to the exam workspace
         </h1>
         <h2 className="text-xl text-gray-700 mb-8">
