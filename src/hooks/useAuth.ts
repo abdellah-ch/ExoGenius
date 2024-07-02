@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 const useAuthStateTeacher = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [teacherId, setTeacherId] = useState(undefined);
-
+  const [data, setData] = useState(undefined);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -17,7 +17,7 @@ const useAuthStateTeacher = () => {
       setIsLoading(false);
       navigate("/");
     } else {
-      fetch("http://localhost/TestToken", {
+      fetch("/api/TestToken", {
         method: "POST",
         mode: "cors", // no-cors, *cors, same-origin
         body: JSON.stringify({ jwt: `${token}` }),
@@ -25,6 +25,7 @@ const useAuthStateTeacher = () => {
         if (res.status == 200) {
           res.json().then((data) => {
             setTeacherId(data.data.id);
+            setData(data.data);
           });
 
           setIsLoading(false);
@@ -39,6 +40,7 @@ const useAuthStateTeacher = () => {
   return {
     isLoading,
     teacherId,
+    data,
   };
 };
 

@@ -31,6 +31,10 @@ const routes: RouteObject[] = [
         path: "/dashboard/exams/:id",
         element: <Monitoring_result />,
       },
+      {
+        path: "/dashboard/profile",
+        element: <Profile />,
+      },
     ],
   },
   {

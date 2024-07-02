@@ -17,7 +17,7 @@ function ExamWorkspace() {
   useEffect(() => {
     const CheckExam = async () => {
       SetIsLoading(true);
-      const res = await fetch("http://localhost/CheckExam", {
+      const res = await fetch("/api/CheckExam", {
         method: "POST",
         mode: "cors", // no-cors, *cors, same-origin
         body: JSON.stringify({ ExamKey: `${ExamKey}` }),

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": " vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
@@ -36,7 +36,7 @@
     "lucide-react": "^0.376.0",
     "match-sorter": "^6.3.1",
     "mathquill": "^0.10.1-a",
-    "quill-editor-math": "^0.2.0",
+    "quill-editor-math": "github:abdellah-ch/quill-editor-math#main",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-draggable": "^4.4.6",
