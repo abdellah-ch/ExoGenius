@@ -50,7 +50,7 @@ function ExamList() {
 
   const handelDelete = (examKey: string) => {
     setIsLoading(true);
-    fetch("/api/deleteExam", {
+    fetch("http://localhost/deleteExam", {
       method: "POST",
       mode: "cors", // no-cors, *cors, same-origin
       body: JSON.stringify({ ExamKey: examKey }),
@@ -64,7 +64,7 @@ function ExamList() {
   };
   useEffect(() => {
     if (teacherId) {
-      fetch("/api/ExamList", {
+      fetch("http://localhost/ExamList", {
         method: "POST",
         mode: "cors", // no-cors, *cors, same-origin
         body: JSON.stringify({ UserId: teacherId }),

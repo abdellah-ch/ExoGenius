@@ -85,7 +85,7 @@ const TakeExam = ({
       ExamKey: ExamKey,
       StudentId: studentId,
     };
-    const res = await fetch("/api/CheckTeacherSubmited", {
+    const res = await fetch("http://localhost/CheckTeacherSubmited", {
       method: "POST",
       mode: "cors",
       body: JSON.stringify(info),
@@ -111,7 +111,7 @@ const TakeExam = ({
       StudentId: studentId,
       Value: studentAnswers,
     };
-    fetch("/api/SubmitStudentAnswer", {
+    fetch("http://localhost/SubmitStudentAnswer", {
       method: "POST",
       mode: "cors", // no-cors, *cors, same-origin
       body: JSON.stringify(info),
@@ -133,7 +133,7 @@ const TakeExam = ({
   useEffect(() => {
     const fetchPdf = async () => {
       try {
-        const response = await fetch("/api/GetExamPdf", {
+        const response = await fetch("http://localhost/GetExamPdf", {
           method: "POST",
           mode: "cors", // no-cors, *cors, same-origin
           body: JSON.stringify({ ExamKey: ExamKey }),
@@ -164,7 +164,7 @@ const TakeExam = ({
       const fetchText = async () => {
         try {
           console.log(ExamKey);
-          const response = await fetch("/api/GetExamText", {
+          const response = await fetch("http://localhost/GetExamText", {
             method: "POST",
             mode: "cors",
             body: JSON.stringify({ ExamKey: ExamKey }),

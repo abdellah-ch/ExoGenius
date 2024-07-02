@@ -14,7 +14,7 @@ const useAuthStateLanding = () => {
 
   useEffect(() => {
     if (token) {
-      fetch("/api/TestToken", {
+      fetch("http://localhost/TestToken", {
         method: "POST",
         mode: "cors", // no-cors, *cors, same-origin
         body: JSON.stringify({ jwt: `${token}` }),

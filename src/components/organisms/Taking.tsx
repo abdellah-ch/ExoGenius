@@ -12,7 +12,7 @@ const Taking = (props: any) => {
       ExamKey: pathname.split("/")[3],
       StudentId: props.selectedStudent.StudentId,
     };
-    const res = await fetch("/api/SubmitStudentExamByTeacher", {
+    const res = await fetch("http://localhost/SubmitStudentExamByTeacher", {
       method: "POST",
       mode: "cors",
       body: JSON.stringify(info),

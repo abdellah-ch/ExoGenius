@@ -35,7 +35,7 @@ const Submited = (props: any) => {
       ExamKey: props.selectedStudent.ExamKey,
       StudentId: props.selectedStudent.StudentId,
     };
-    const res = await fetch("/api/GetExamAnswear", {
+    const res = await fetch("http://localhost/GetExamAnswear", {
       method: "POST",
       mode: "cors", // no-cors, *cors, same-origin
       body: JSON.stringify(info),

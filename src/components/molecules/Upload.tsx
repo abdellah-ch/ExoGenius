@@ -58,7 +58,7 @@ const Upload = (props: StepProps) => {
 
       props.setUploadedFile(file);
       console.log("Uploaded filefile:", file);
-      // fetch("/api/NewExam", {
+      // fetch("http://localhost/NewExam", {
       //   method: "GET",
       // }).then((res) => {
       //   res.blob().then((result) => {

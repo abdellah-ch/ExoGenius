@@ -36,7 +36,7 @@ const ExamSpaceComponent = (props: {
       Id: id.value,
       ExamKey: props.ExamKey,
     };
-    fetch("/api/TakeExamStudent", {
+    fetch("http://localhost/TakeExamStudent", {
       method: "POST",
       mode: "cors", // no-cors, *cors, same-origin
       body: JSON.stringify(info),

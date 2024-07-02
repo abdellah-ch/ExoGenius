@@ -12,7 +12,7 @@ const useProviderAuth = () => {
   //const token = Cookies.get("token");
 
   const { toast } = useToast();
-  const url = "/api/Login";
+  const url = "http://localhost/Login";
 
   const navigate = useNavigate();
   const Login = (LoginData: { email: string; password: string }) => {
@@ -48,7 +48,7 @@ const useProviderAuth = () => {
     email: string;
     password: string;
   }) => {
-    fetch("/api/Register", {
+    fetch("http://localhost/Register", {
       method: "POST",
       mode: "cors",
       body: JSON.stringify({
