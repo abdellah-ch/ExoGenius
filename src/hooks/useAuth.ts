@@ -17,7 +17,7 @@ const useAuthStateTeacher = () => {
       setIsLoading(false);
       navigate("/");
     } else {
-      fetch("http://localhost/TestToken", {
+      fetch("/api/TestToken", {
         method: "POST",
         mode: "cors", // no-cors, *cors, same-origin
         body: JSON.stringify({ jwt: `${token}` }),

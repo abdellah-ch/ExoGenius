@@ -10,9 +10,9 @@ import Split from "react-split";
 import ReactCodeMirror from "@uiw/react-codemirror";
 import { loadLanguage } from "@uiw/codemirror-extensions-langs";
 import { Document, Page } from "react-pdf";
-import Editor from "quill-editor-math";
-import "quill-editor-math/dist/index.css";
-import { useCallback, useEffect, useRef, useState } from "react";
+// import Editor from "quill-editor-math";
+// import "quill-editor-math/dist/index.css";
+import { useCallback, useEffect, useState } from "react";
 import Loading from "./Loading";
 import Draggable from "react-draggable";
 
@@ -85,7 +85,7 @@ const TakeExam = ({
       ExamKey: ExamKey,
       StudentId: studentId,
     };
-    const res = await fetch("http://localhost/CheckTeacherSubmited", {
+    const res = await fetch("/api/CheckTeacherSubmited", {
       method: "POST",
       mode: "cors",
       body: JSON.stringify(info),
@@ -111,7 +111,7 @@ const TakeExam = ({
       StudentId: studentId,
       Value: studentAnswers,
     };
-    fetch("http://localhost/SubmitStudentAnswer", {
+    fetch("/api/SubmitStudentAnswer", {
       method: "POST",
       mode: "cors", // no-cors, *cors, same-origin
       body: JSON.stringify(info),
@@ -133,7 +133,7 @@ const TakeExam = ({
   useEffect(() => {
     const fetchPdf = async () => {
       try {
-        const response = await fetch("http://localhost/GetExamPdf", {
+        const response = await fetch("/api/GetExamPdf", {
           method: "POST",
           mode: "cors", // no-cors, *cors, same-origin
           body: JSON.stringify({ ExamKey: ExamKey }),
@@ -164,7 +164,7 @@ const TakeExam = ({
       const fetchText = async () => {
         try {
           console.log(ExamKey);
-          const response = await fetch("http://localhost/GetExamText", {
+          const response = await fetch("/api/GetExamText", {
             method: "POST",
             mode: "cors",
             body: JSON.stringify({ ExamKey: ExamKey }),
@@ -342,12 +342,13 @@ const TakeExam = ({
                   extensions={[loadLanguage("javascript")!]}
                 />
               ) : (
-                <Editor
-                  initialValue=""
-                  onChange={(value) => {
-                    SetStudentAnswers(value);
-                  }}
-                />
+                <></>
+                // <Editor
+                //   initialValue=""
+                //   onChange={(value) => {
+                //     SetStudentAnswers(value);
+                //   }}
+                // />
               )}
             </div>
           </Split>

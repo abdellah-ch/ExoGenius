@@ -1,5 +1,5 @@
-import Editor from "quill-editor-math";
-import "quill-editor-math/dist/index.css";
+// import Editor from "quill-editor-math";
+// import "quill-editor-math/dist/index.css";
 // import { useState } from "react";
 
 interface StepProps {
@@ -8,12 +8,12 @@ interface StepProps {
 const WriteExam = (props: StepProps) => {
   return (
     <div className="min-h-[50vh]">
-      <Editor
+      {/* <Editor
         initialValue=""
         onChange={(value) => {
           props.setEditorValue(value);
         }}
-      />
+      /> */}
     </div>
   );
 };

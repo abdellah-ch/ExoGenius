@@ -12,9 +12,15 @@ function Profile() {
       const info = {
         id: teacherId,
       };
+<<<<<<< HEAD
       const res = await fetch("http://localhost/GetTeacherInfo", {
         method: "POST",
         mode: "cors",
+=======
+      const res = await fetch("/api/GetTeacherInfo", {
+        method: "POST",
+        mode: "no-cors",
+>>>>>>> 4d99c0d285f3f11a5007f7174571d133644011d4
         body: JSON.stringify(info),
       });
       console.log(res);

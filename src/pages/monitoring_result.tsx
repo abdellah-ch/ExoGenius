@@ -24,7 +24,7 @@ const Monitoring_result = () => {
     const info = {
       ExamKey: pathname.split("/")[3],
     };
-    const res = await fetch("http://localhost/CheckExam", {
+    const res = await fetch("/api/CheckExam", {
       method: "POST",
       mode: "cors", // no-cors, *cors, same-origin
       body: JSON.stringify(info),
@@ -39,7 +39,7 @@ const Monitoring_result = () => {
     const info = {
       ExamKey: pathname.split("/")[3],
     };
-    const res = await fetch("http://localhost/GetTakingStudentList", {
+    const res = await fetch("/api/GetTakingStudentList", {
       method: "POST",
       mode: "cors", // no-cors, *cors, same-origin
       body: JSON.stringify(info),
@@ -53,7 +53,7 @@ const Monitoring_result = () => {
     const info = {
       ExamKey: pathname.split("/")[3],
     };
-    const res = await fetch("http://localhost/GetSubmittedStudentList", {
+    const res = await fetch("/api/GetSubmittedStudentList", {
       method: "POST",
       mode: "cors", // no-cors, *cors, same-origin
       body: JSON.stringify(info),
