@@ -10,8 +10,8 @@ import Split from "react-split";
 import ReactCodeMirror from "@uiw/react-codemirror";
 import { loadLanguage } from "@uiw/codemirror-extensions-langs";
 import { Document, Page } from "react-pdf";
-// import Editor from "quill-editor-math";
-// import "quill-editor-math/dist/index.css";
+import Editor from "quill-editor-math";
+import "quill-editor-math/dist/index.css";
 import { useCallback, useEffect, useState } from "react";
 import Loading from "./Loading";
 import Draggable from "react-draggable";
@@ -128,7 +128,7 @@ const TakeExam = ({
     if (teacherSubmited) {
       handelsumbit();
     }
-  }, [teacherSubmited, handelsumbit]);
+  }, [teacherSubmited]);
 
   useEffect(() => {
     const fetchPdf = async () => {
@@ -174,7 +174,9 @@ const TakeExam = ({
           const data = await response.json();
           console.log(data);
           setExamText(data.Value);
-        } catch (error) {}
+        } catch (error) {
+          console.log(error);
+        }
       };
 
       fetchText();
@@ -191,6 +193,7 @@ const TakeExam = ({
   const handleStart = useCallback(eventLogger, []);
   const handleDrag = useCallback(eventLogger, []);
   const handleStop = useCallback(eventLogger, []);
+
   if (IsLoading === true) {
     return <Loading />;
   }
@@ -342,13 +345,12 @@ const TakeExam = ({
                   extensions={[loadLanguage("javascript")!]}
                 />
               ) : (
-                <></>
-                // <Editor
-                //   initialValue=""
-                //   onChange={(value) => {
-                //     SetStudentAnswers(value);
-                //   }}
-                // />
+                <Editor
+                  initialValue=""
+                  onChange={(value) => {
+                    SetStudentAnswers(value);
+                  }}
+                />
               )}
             </div>
           </Split>

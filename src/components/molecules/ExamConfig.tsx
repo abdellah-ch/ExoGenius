@@ -158,7 +158,7 @@ function ExamConfig(props: StepProps) {
                   <div className="space-y-0.5">
                     <FormLabel className="text-base">Exam access</FormLabel>
                     <FormDescription>
-                      Enable or disable Exam access
+                      Enable or disable Exam access (Check to close the exam)
                     </FormDescription>
                   </div>
                   <FormControl>
@@ -168,9 +168,9 @@ function ExamConfig(props: StepProps) {
                         field.onChange(checked);
                         console.log(checked);
                         if (checked) {
-                          props.setIsLocked(0);
-                        } else {
                           props.setIsLocked(1);
+                        } else {
+                          props.setIsLocked(0);
                         }
                       }}
                     />

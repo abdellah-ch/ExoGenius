@@ -12,6 +12,7 @@ function ExamWorkspace() {
   const ExamKey = pathname.split("/")[2];
   const [state, setState] = useState<string>("");
   const [subject, setSubject] = useState<string>("");
+  const [isLocked, setIsLocked] = useState<boolean | undefined>(undefined);
   console.log(state);
 
   useEffect(() => {
@@ -37,6 +38,10 @@ function ExamWorkspace() {
 
         setState(data.State);
         setSubject(data.Subject);
+        if (data.IsLocked === "1") {
+          setIsLocked(true);
+        }
+
         SetIsLoading(false);
       }
     };

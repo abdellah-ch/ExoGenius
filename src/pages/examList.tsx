@@ -115,7 +115,7 @@ function ExamList() {
                         <SelectTrigger className=" text-left w-[70%] m-auto">
                           <SelectValue
                             placeholder={
-                              exam.IsLocked.toString() === "0"
+                              exam.IsLocked.toString() === "1"
                                 ? "Closed"
                                 : "Open"
                             }
