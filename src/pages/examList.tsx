@@ -68,6 +68,17 @@ function ExamList() {
       mode: "cors", // no-cors, *cors, same-origin
       body: JSON.stringify({ ExamKey: examKey }),
     }).then((response) => {
+      setIsLoading(true);
+      fetch("http://localhost/ExamList", {
+        method: "POST",
+        mode: "cors", // no-cors, *cors, same-origin
+        body: JSON.stringify({ UserId: teacherId }),
+      }).then((response) => {
+        response.json().then((data) => {
+          setExamList(data);
+          setIsLoading(false);
+        });
+      });
       console.log(response);
       response.json().then((data) => {
         console.log(data);
@@ -88,7 +99,7 @@ function ExamList() {
         });
       });
     }
-  }, [isLoading, teacherId]);
+  }, [isLoading, teacherId, examList]);
 
   if (isLoading) {
     return (
