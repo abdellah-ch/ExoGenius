@@ -3,7 +3,7 @@
 /node_modules
 /.pnp
 .pnp.js
-
+/dest
 # testing
 /coverage
 
@@ -30,3 +30,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+_redirects
+
+dest
+
+./.vscode

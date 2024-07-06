@@ -10,8 +10,10 @@ import Split from "react-split";
 import ReactCodeMirror from "@uiw/react-codemirror";
 import { loadLanguage } from "@uiw/codemirror-extensions-langs";
 import { Document, Page } from "react-pdf";
-import Editor from "quill-editor-math";
-import "quill-editor-math/dist/index.css";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+// import Editor from "quill-editor-math";
+// import "quill-editor-math/dist/index.css";
 import { useCallback, useEffect, useState } from "react";
 import Loading from "./Loading";
 import Draggable from "react-draggable";
@@ -47,6 +49,19 @@ const TakeExam = ({
   });
 
   const [showChat, setShowChat] = useState<boolean>(false);
+  const modules = {
+    toolbar: [
+      [{ font: [] }],
+      [{ header: [1, 2, 3, 4, 5, 6, false] }],
+      ["bold", "italic", "underline", "strike"],
+      [{ color: [] }, { background: [] }],
+      [{ script: "sub" }, { script: "super" }],
+      ["blockquote", "code-block"],
+      [{ list: "ordered" }, { list: "bullet" }],
+      ["link", "image", "video"],
+      ["clean"],
+    ],
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -345,7 +360,9 @@ const TakeExam = ({
                   extensions={[loadLanguage("javascript")!]}
                 />
               ) : (
-                <Editor
+                <ReactQuill
+                  modules={modules}
+                  theme="snow"
                   initialValue=""
                   onChange={(value) => {
                     SetStudentAnswers(value);

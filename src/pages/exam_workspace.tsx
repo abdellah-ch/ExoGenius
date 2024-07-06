@@ -7,6 +7,9 @@ import ExamSpaceComponent from "../components/organisms/ExamSpaceComponent.tsx";
 function ExamWorkspace() {
   const [IsLoading, SetIsLoading] = useState<boolean>(true);
   const [IsExamKeyCorrect, SetIsExamKeyCorrect] = useState<boolean>(false);
+  const [IsExamClosed, setIsExamClosed] = useState<number | undefined>(
+    undefined
+  );
   const location = useLocation();
   const pathname = location.pathname;
   const ExamKey = pathname.split("/")[2];
@@ -26,14 +29,18 @@ function ExamWorkspace() {
 
       //   const data = await res.json();
       //   console.log(data);
+      const data = await res.json();
 
-      if (res.status != 200) {
+      // console.log(data);
+
+      if (res.status != 200 || data.IsLocked === "1") {
         SetIsLoading(false);
         SetIsExamKeyCorrect(false);
+        SetIsLoading(false);
       }
-      if (res.status == 200) {
+      if (res.status == 200 && data.IsLocked === "0") {
         SetIsExamKeyCorrect(true);
-        const data = await res.json();
+        // const data = await res.json();
         console.log(data);
 
         setState(data.State);

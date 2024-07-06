@@ -28,6 +28,7 @@ import {
   TableHeader,
   TableRow,
 } from "../components/ui/table";
+import Loading from "../components/organisms/Loading";
 
 interface ExamType {
   ExamKey: string;
@@ -47,6 +48,18 @@ function ExamList() {
 
   const navigate = useNavigate();
   const { teacherId } = useAuthStateTeacher();
+
+  const UpdateExamAccess = async (examKey: string, value: number) => {
+    const res = await fetch("http://localhost/UpdateExamAcess", {
+      method: "POST",
+      mode: "cors", // no-cors, *cors, same-origin
+      body: JSON.stringify({ ExamKey: examKey, value: value }),
+    });
+
+    const data = await res.json();
+
+    alert(data.msg);
+  };
 
   const handelDelete = (examKey: string) => {
     setIsLoading(true);
@@ -75,10 +88,14 @@ function ExamList() {
         });
       });
     }
-  }, [teacherId, examList, isLoading]);
+  }, [isLoading, teacherId]);
 
   if (isLoading) {
-    return <div></div>;
+    return (
+      <div className="absolute h-full w-full top-0 left-0 bottom-0 right-0">
+        <Loading />
+      </div>
+    );
   }
   if (examList.length > 0 && teacherId) {
     return (
@@ -111,7 +128,16 @@ function ExamList() {
                     </TableCell>
                     <TableCell className="text-center">
                       {/* {exam.IsLocked === "0" ? "Open" : "Closed"} */}
-                      <Select onValueChange={(val) => {}}>
+                      <Select
+                        onValueChange={(val) => {
+                          // alert(val);
+                          if (val === "Open") {
+                            UpdateExamAccess(exam.ExamKey, 0);
+                          } else if (val === "Closed") {
+                            UpdateExamAccess(exam.ExamKey, 1);
+                          }
+                        }}
+                      >
                         <SelectTrigger className=" text-left w-[70%] m-auto">
                           <SelectValue
                             placeholder={
@@ -123,13 +149,19 @@ function ExamList() {
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="Open">
-                            <div className="flex gap-2 items-center  justify-start p-2 pl-0">
+                            <div
+                              onClick={() => {}}
+                              className="flex gap-2 items-center  justify-start p-2 pl-0"
+                            >
                               <FaDotCircle className="text-green-500 " />
                               Open
                             </div>
                           </SelectItem>
                           <SelectItem value="Closed">
-                            <div className="flex gap-2 items-center  justify-start p-2 pl-0">
+                            <div
+                              onClick={() => {}}
+                              className="flex gap-2 items-center  justify-start p-2 pl-0"
+                            >
                               <FaDotCircle className="text-red-700" />
                               Closed
                             </div>
