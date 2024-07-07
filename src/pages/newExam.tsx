@@ -94,7 +94,7 @@ const NewExam = () => {
 
       // console.log(info);
 
-      const res = await fetch("http://localhost/NewExam", {
+      const res = await fetch("https://exob.onrender.com/NewExam", {
         method: "POST",
         mode: "cors", // no-cors, *cors, same-origin
         body: JSON.stringify(info),
@@ -107,7 +107,7 @@ const NewExam = () => {
 
       // console.log(data.examKey);
       if (data.state === 1) {
-        const result = await fetch("http://localhost/uploadPdf", {
+        const result = await fetch("https://exob.onrender.com/uploadPdf", {
           method: "POST",
           headers: {
             "Content-Type": "application/octet-stream",
@@ -130,7 +130,7 @@ const NewExam = () => {
           ExamKey: data.examKey,
           Text: EditorValue,
         };
-        const res = await fetch("http://localhost/ExamText", {
+        const res = await fetch("https://exob.onrender.com/ExamText", {
           method: "POST",
           mode: "cors", // no-cors, *cors, same-origin
           body: JSON.stringify(send),

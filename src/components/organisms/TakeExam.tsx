@@ -100,7 +100,7 @@ const TakeExam = ({
       ExamKey: ExamKey,
       StudentId: studentId,
     };
-    const res = await fetch("http://localhost/CheckTeacherSubmited", {
+    const res = await fetch("https://exob.onrender.com/CheckTeacherSubmited", {
       method: "POST",
       mode: "cors",
       body: JSON.stringify(info),
@@ -126,7 +126,7 @@ const TakeExam = ({
       StudentId: studentId,
       Value: studentAnswers,
     };
-    fetch("http://localhost/SubmitStudentAnswer", {
+    fetch("https://exob.onrender.com/SubmitStudentAnswer", {
       method: "POST",
       mode: "cors", // no-cors, *cors, same-origin
       body: JSON.stringify(info),
@@ -148,7 +148,7 @@ const TakeExam = ({
   useEffect(() => {
     const fetchPdf = async () => {
       try {
-        const response = await fetch("http://localhost/GetExamPdf", {
+        const response = await fetch("https://exob.onrender.com/GetExamPdf", {
           method: "POST",
           mode: "cors", // no-cors, *cors, same-origin
           body: JSON.stringify({ ExamKey: ExamKey }),
@@ -179,11 +179,14 @@ const TakeExam = ({
       const fetchText = async () => {
         try {
           console.log(ExamKey);
-          const response = await fetch("http://localhost/GetExamText", {
-            method: "POST",
-            mode: "cors",
-            body: JSON.stringify({ ExamKey: ExamKey }),
-          });
+          const response = await fetch(
+            "https://exob.onrender.com/GetExamText",
+            {
+              method: "POST",
+              mode: "cors",
+              body: JSON.stringify({ ExamKey: ExamKey }),
+            }
+          );
           console.log(response);
 
           const data = await response.json();

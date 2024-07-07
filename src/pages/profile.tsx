@@ -12,7 +12,7 @@ function Profile() {
       const info = {
         id: teacherId,
       };
-      const res = await fetch("http://localhost/GetTeacherInfo", {
+      const res = await fetch("https://exob.onrender.com/GetTeacherInfo", {
         method: "POST",
         mode: "cors",
         body: JSON.stringify(info),

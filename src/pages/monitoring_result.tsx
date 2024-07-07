@@ -24,7 +24,7 @@ const Monitoring_result = () => {
     const info = {
       ExamKey: pathname.split("/")[3],
     };
-    const res = await fetch("http://localhost/CheckExam", {
+    const res = await fetch("https://exob.onrender.com/CheckExam", {
       method: "POST",
       mode: "cors", // no-cors, *cors, same-origin
       body: JSON.stringify(info),
@@ -39,7 +39,7 @@ const Monitoring_result = () => {
     const info = {
       ExamKey: pathname.split("/")[3],
     };
-    const res = await fetch("http://localhost/GetTakingStudentList", {
+    const res = await fetch("https://exob.onrender.com/GetTakingStudentList", {
       method: "POST",
       mode: "cors", // no-cors, *cors, same-origin
       body: JSON.stringify(info),
@@ -53,11 +53,14 @@ const Monitoring_result = () => {
     const info = {
       ExamKey: pathname.split("/")[3],
     };
-    const res = await fetch("http://localhost/GetSubmittedStudentList", {
-      method: "POST",
-      mode: "cors", // no-cors, *cors, same-origin
-      body: JSON.stringify(info),
-    });
+    const res = await fetch(
+      "https://exob.onrender.com/GetSubmittedStudentList",
+      {
+        method: "POST",
+        mode: "cors", // no-cors, *cors, same-origin
+        body: JSON.stringify(info),
+      }
+    );
 
     const data = await res.json();
     // console.log(data);

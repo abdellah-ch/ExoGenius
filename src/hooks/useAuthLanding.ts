@@ -14,7 +14,7 @@ const useAuthStateLanding = () => {
 
   useEffect(() => {
     if (token) {
-      fetch("http://localhost/TestToken", {
+      fetch("https://exob.onrender.com/TestToken", {
         method: "POST",
         mode: "cors", // no-cors, *cors, same-origin
         body: JSON.stringify({ jwt: `${token}` }),

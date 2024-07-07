@@ -50,7 +50,7 @@ function ExamList() {
   const { teacherId } = useAuthStateTeacher();
 
   const UpdateExamAccess = async (examKey: string, value: number) => {
-    const res = await fetch("http://localhost/UpdateExamAcess", {
+    const res = await fetch("https://exob.onrender.com/UpdateExamAcess", {
       method: "POST",
       mode: "cors", // no-cors, *cors, same-origin
       body: JSON.stringify({ ExamKey: examKey, value: value }),
@@ -63,13 +63,13 @@ function ExamList() {
 
   const handelDelete = (examKey: string) => {
     setIsLoading(true);
-    fetch("http://localhost/deleteExam", {
+    fetch("https://exob.onrender.com/deleteExam", {
       method: "POST",
       mode: "cors", // no-cors, *cors, same-origin
       body: JSON.stringify({ ExamKey: examKey }),
     }).then((response) => {
       setIsLoading(true);
-      fetch("http://localhost/ExamList", {
+      fetch("https://exob.onrender.com/ExamList", {
         method: "POST",
         mode: "cors", // no-cors, *cors, same-origin
         body: JSON.stringify({ UserId: teacherId }),
@@ -88,7 +88,7 @@ function ExamList() {
   };
   useEffect(() => {
     if (teacherId) {
-      fetch("http://localhost/ExamList", {
+      fetch("https://exob.onrender.com/ExamList", {
         method: "POST",
         mode: "cors", // no-cors, *cors, same-origin
         body: JSON.stringify({ UserId: teacherId }),
