@@ -153,7 +153,7 @@ const TakeExam = ({
           mode: "cors", // no-cors, *cors, same-origin
           body: JSON.stringify({ ExamKey: ExamKey }),
           headers: {
-            "Content-Type": "application/pdf",
+            "Content-Type": "application/json",
           },
         });
 
