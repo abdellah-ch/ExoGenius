@@ -107,19 +107,38 @@ const NewExam = () => {
 
       // console.log(data.examKey);
       if (data.state === 1) {
-        const result = await fetch("https://exob.onrender.com/uploadPdf", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/octet-stream",
-            "X-File-Name": data.examKey,
-          },
-          mode: "cors", // no-cors, *cors, same-origin
-          body: uploadedFile,
-        });
-        if (result.status === 200) {
-          navigate("/dashboard/ExamList");
-        } else {
-          console.log("error", result.status);
+        const reader = new FileReader();
+        if (uploadedFile != null) {
+          reader.readAsDataURL(uploadedFile);
+          reader.onloadend = async () => {
+            if (typeof reader.result === "string") {
+              const base64String = reader.result?.split(",")[1]; // Get base64 part
+
+              const info = {
+                fileContent: base64String,
+              };
+
+              const result = await fetch(
+                "https://exob.onrender.com/uploadPdf",
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                    "X-File-Name": data.examKey,
+                  },
+                  mode: "cors", // no-cors, *cors, same-origin
+                  body: JSON.stringify(info),
+                }
+              );
+              if (result.status === 200) {
+                navigate("/dashboard/ExamList");
+              } else {
+                console.log("error", result.status);
+              }
+            } else {
+              alert("file reader is not a string");
+            }
+          };
         }
       } else if (data.state === 0) {
         //insert the exam value into the database ExamText

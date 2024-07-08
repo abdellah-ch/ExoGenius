@@ -152,14 +152,14 @@ const TakeExam = ({
           method: "POST",
           mode: "cors", // no-cors, *cors, same-origin
           body: JSON.stringify({ ExamKey: ExamKey }),
-          headers: {
-            "Content-Type": "application/json",
-          },
         });
 
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
+        // const data = await response.json();
+
+        // console.log(response);
 
         const blob = await response.blob();
         const url = URL.createObjectURL(blob);
