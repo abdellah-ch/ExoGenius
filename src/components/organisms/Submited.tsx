@@ -8,6 +8,7 @@ import { useReactToPrint } from "react-to-print";
 const Submited = (props: any) => {
   const [subject, setSubject] = useState<string>("");
   const [answear, setAnswear] = useState<string>("");
+  const [isLoadingAnswer, setIsLoadingAnswer] = useState<boolean>(true);
   const answerRef = useRef();
 
   const handlePrint = useReactToPrint({
@@ -44,9 +45,11 @@ const Submited = (props: any) => {
     setSubject(data.Subject);
     setAnswear(data.Answer);
     console.log(data);
+    setIsLoadingAnswer(false);
   };
   console.log(props);
   useEffect(() => {
+    setIsLoadingAnswer(true);
     fetchAnswear();
   }, [props.selectedStudent.StudentId]);
 
@@ -92,15 +95,29 @@ const Submited = (props: any) => {
       <div className="mt-5">
         <p className="font-semibold">Student answear</p>
       </div>
-      <div ref={answerRef} className="min-h-[300px] mt-2">
-        {subject === "Programming" ? (
-          <pre style={{ whiteSpace: "pre-wrap" }}>{answear}</pre>
-        ) : (
-          <div className="p-4" dangerouslySetInnerHTML={{ __html: answear }}>
-            {}
-          </div>
-        )}
-      </div>
+      {isLoadingAnswer ? (
+        <div>loading Answer ...</div>
+      ) : (
+        <div ref={answerRef} className="min-h-[300px] mt-2">
+          {subject === "Programming" ? (
+            <pre style={{ whiteSpace: "pre-wrap" }}>
+              {answear == "" ? "student didn't write any thing" : answear}
+            </pre>
+          ) : (
+            <div
+              className="p-4"
+              dangerouslySetInnerHTML={{
+                __html:
+                  answear === undefined
+                    ? "student didn't write any thing"
+                    : answear,
+              }}
+            >
+              {}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

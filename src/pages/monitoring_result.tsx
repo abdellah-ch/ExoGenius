@@ -8,6 +8,7 @@ import Taking from "../components/organisms/Taking";
 import Submited from "../components/organisms/Submited";
 import { MdOutlineMessage } from "react-icons/md";
 import { IoIosSend } from "react-icons/io";
+import Loading from "../components/organisms/Loading";
 
 const Monitoring_result = () => {
   const { pathname } = useLocation();
@@ -17,7 +18,7 @@ const Monitoring_result = () => {
   const [componetState, setComponetState] = useState<string>("overview");
   const [selectedSubmitStudent, setSelectedSubmitStudent] = useState<any>();
   const [examInfo, setExamInfo] = useState<any>();
-
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   console.log(selectedSubmitStudent);
 
   const fetchExamInfo = async () => {
@@ -31,8 +32,10 @@ const Monitoring_result = () => {
     });
 
     const data = await res.json();
-    // console.log(data);
+    console.log(data);
     setExamInfo(data);
+
+    setIsLoading(false);
   };
 
   const fetchTakingStudent = async () => {
@@ -79,6 +82,14 @@ const Monitoring_result = () => {
 
     return () => clearInterval(interval);
   }, [pathname]);
+
+  if (isLoading) {
+    return (
+      <div className="absolute top-0 bottom-0 left-0 right-0">
+        <Loading />
+      </div>
+    );
+  }
 
   return (
     <div className=" flex min-w-[90%] m-auto gap-5">
@@ -141,7 +152,10 @@ const Monitoring_result = () => {
             SubmitCount={submitedList.length}
           />
         ) : componetState === "taking" ? (
-          <Taking selectedStudent={selectedSubmitStudent} />
+          <Taking
+            selectedStudent={selectedSubmitStudent}
+            setComponetState={setComponetState}
+          />
         ) : (
           <Submited selectedStudent={selectedSubmitStudent} />
         )}

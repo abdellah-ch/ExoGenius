@@ -18,6 +18,8 @@ const Overview = (props: {
   //     "IsLocked": "1",
   //     "CreatedBy": "393566"
   // }
+  console.log(typeof props.ExamInfo.IsLocked);
+
   return (
     <div className="bg-white w-full p-6 rounded-lg flex flex-col gap-5">
       <div>
@@ -43,7 +45,7 @@ const Overview = (props: {
             Access <FaRegQuestionCircle className="text-gray-400" />
           </p>
           <div className="rounded-full font-semibold  border-2 ml-[19px] px-4 py-1 hover:text-yellow-400 hover:border-yellow-400 cursor-pointer">
-            {props.ExamInfo?.IsLocked ? "Open" : "Closed"}
+            {props.ExamInfo?.IsLocked === "0" ? "Open" : "Closed"}
           </div>
         </div>
         {/* <div>

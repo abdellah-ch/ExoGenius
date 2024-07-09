@@ -3,11 +3,14 @@ import { FaPen, FaSignOutAlt } from "react-icons/fa";
 import { Button } from "../ui/button";
 import { MdDelete } from "react-icons/md";
 import { useLocation } from "react-router-dom";
+import { useState } from "react";
 
 const Taking = (props: any) => {
   const { pathname } = useLocation();
+  const [isButtonClicked, setIsButtonClicked] = useState<boolean>(false);
 
   const SubmiteExamforStudent = async () => {
+    setIsButtonClicked(true);
     const info = {
       ExamKey: pathname.split("/")[3],
       StudentId: props.selectedStudent.StudentId,
@@ -20,6 +23,7 @@ const Taking = (props: any) => {
         body: JSON.stringify(info),
       }
     );
+    props.setComponetState("overview");
   };
 
   return (
@@ -44,6 +48,7 @@ const Taking = (props: any) => {
           <Button
             onClick={SubmiteExamforStudent}
             className="w-[300px] rounded-full px-8 flex justify-center  items-center gap-4"
+            disabled={isButtonClicked ? true : false}
           >
             <FaSignOutAlt className="text-lg" />
             End the Exam for this student
