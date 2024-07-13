@@ -103,31 +103,37 @@ const TakeExam = ({
     const info = {
       ExamKey: ExamKey,
     };
-    const response = await fetch("http://localhost:8000/api/GetTeacherId", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      mode: "cors",
-      body: JSON.stringify(info),
-    });
+    const response = await fetch(
+      "https://exogeniusnode.onrender.com/api/GetTeacherId",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        mode: "cors",
+        body: JSON.stringify(info),
+      }
+    );
     const data = await response.json();
     const teacherId = data[0]["CreatedBy"];
     setTeacherId(Number(teacherId));
   };
   const fetchMessages = async () => {
     try {
-      const response = await fetch("http://localhost:8000/api/getMessages", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        mode: "cors",
-        body: JSON.stringify({
-          teacherId: teacherId, // replace with actual teacherId
-          studentId: studentId, // replace with actual studentId
-        }),
-      });
+      const response = await fetch(
+        "https://exogeniusnode.onrender.com/api/getMessages",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          mode: "cors",
+          body: JSON.stringify({
+            teacherId: teacherId, // replace with actual teacherId
+            studentId: studentId, // replace with actual studentId
+          }),
+        }
+      );
       console.log(response);
 
       const data = await response.json();

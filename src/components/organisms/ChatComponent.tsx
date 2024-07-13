@@ -50,17 +50,20 @@ const ChatComponent = (props: any) => {
     try {
       console.log(props.selectedStudent);
 
-      const response = await fetch("http://localhost:8000/api/getMessages", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        mode: "cors",
-        body: JSON.stringify({
-          teacherId: props.teacherId, // replace with actual teacherId
-          studentId: props.selectedStudent.StudentId, // replace with actual studentId
-        }),
-      });
+      const response = await fetch(
+        "https://exogeniusnode.onrender.com/api/getMessages",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          mode: "cors",
+          body: JSON.stringify({
+            teacherId: props.teacherId, // replace with actual teacherId
+            studentId: props.selectedStudent.StudentId, // replace with actual studentId
+          }),
+        }
+      );
       console.log(response);
 
       const data = await response.json();
