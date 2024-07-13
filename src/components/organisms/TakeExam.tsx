@@ -14,7 +14,7 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 // import Editor from "quill-editor-math";
 // import "quill-editor-math/dist/index.css";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Loading from "./Loading";
 import Draggable from "react-draggable";
 
@@ -94,6 +94,100 @@ const TakeExam = ({
   const [studentAnswers, SetStudentAnswers] = useState<string>("");
   const [IsModel, SetIsModel] = useState<boolean>(false);
   const [teacherSubmited, setTeacherSubmited] = useState<boolean>(false);
+  const [teacherId, setTeacherId] = useState<number>(undefined);
+
+  const [inputValue, setInputValue] = useState("");
+  const [messages, setMessages] = useState<any[]>([]);
+  const fetchTeacherId = async () => {
+    console.log(ExamKey);
+    const info = {
+      ExamKey: ExamKey,
+    };
+    const response = await fetch("http://localhost:8000/api/GetTeacherId", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      mode: "cors",
+      body: JSON.stringify(info),
+    });
+    const data = await response.json();
+    const teacherId = data[0]["CreatedBy"];
+    setTeacherId(Number(teacherId));
+  };
+  const fetchMessages = async () => {
+    try {
+      const response = await fetch("http://localhost:8000/api/getMessages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        mode: "cors",
+        body: JSON.stringify({
+          teacherId: teacherId, // replace with actual teacherId
+          studentId: studentId, // replace with actual studentId
+        }),
+      });
+      console.log(response);
+
+      const data = await response.json();
+      console.log(data);
+
+      setMessages(data);
+    } catch (error) {
+      console.error("Error fetching messages:", error);
+    }
+  };
+
+  const ws = useRef<WebSocket | null>(null);
+
+  const sendMessage = () => {
+    if (ws.current && ws.current.readyState === WebSocket.OPEN) {
+      const message = {
+        type: "chat",
+        ExamKey: pathname.split("/")[2], // Include the ExamKey
+        SenderType: "Student", // or 'Teacher', depending on the sender
+        SenderId: studentId, // Include the SenderId
+        ReceiverType: "Teacher", // or 'Student', depending on the receiver
+        ReceiverId: teacherId, // Receiver's ID
+        MessageText: inputValue,
+      };
+      ws.current.send(JSON.stringify(message));
+      setInputValue("");
+    }
+  };
+  useEffect(() => {
+    fetchTeacherId();
+    fetchMessages();
+    ws.current = new WebSocket("ws://localhost:8000");
+
+    // Handle incoming messages
+    ws.current.onmessage = (event: any) => {
+      const message = JSON.parse(event.data);
+      console.log(message);
+      if (
+        (message.ReceiverId === studentId && message.SenderId == teacherId) ||
+        (message.ReceiverId == teacherId && message.SenderId == studentId)
+      )
+        setMessages((prevMessages: any[]) => {
+          const updatedMessages = [...prevMessages, message];
+          console.log("updated messages : ", updatedMessages);
+          return updatedMessages;
+        });
+    };
+
+    // Handle connection close
+    ws.current.onclose = () => {
+      console.log("WebSocket connection closed");
+    };
+
+    // Cleanup function to close WebSocket connection
+    return () => {
+      if (ws.current) {
+        ws.current.close();
+      }
+    };
+  }, [teacherId]);
 
   const checkTeacherSubmited = async () => {
     const info = {
@@ -212,6 +306,15 @@ const TakeExam = ({
   const handleDrag = useCallback(eventLogger, []);
   const handleStop = useCallback(eventLogger, []);
 
+  const chatContainerRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    // Scroll to the bottom when messages change
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
+    }
+  }, [messages]);
+
   if (IsLoading === true) {
     return <Loading />;
   }
@@ -250,17 +353,52 @@ const TakeExam = ({
                   </button>
                 </div>
                 <div className="p-4">
-                  <p className="text-muted-foreground">
-                    Note that messages only reach the receiver if they are
-                    currently in the exam view.
-                  </p>
+                  {messages.length === 0 ? (
+                    <p className="text-muted-foreground">
+                      Note that messages only reach the receiver if they are
+                      currently in the exam view.
+                    </p>
+                  ) : (
+                    <div
+                      ref={chatContainerRef}
+                      className="w-full max-h-[300px] overflow-y-scroll flex flex-col gap-2 mb-4"
+                    >
+                      {messages.map((msg, index) => (
+                        <div
+                          className={
+                            msg.SenderType === "Teacher"
+                              ? "flex justify-start"
+                              : "flex justify-end"
+                          }
+                        >
+                          <div
+                            className="relative w-[70%]  text-xs text-center bg-blue-500 text-white font-mono py-2 px-1 shadow rounded-xl "
+                            key={index}
+                          >
+                            {msg.MessageText}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
                 <div className="border-t p-2">
-                  <input
-                    type="text"
-                    placeholder="Type here"
-                    className="w-full p-2 border rounded-lg"
-                  />
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      sendMessage();
+                    }}
+                  >
+                    <input
+                      type="text"
+                      value={inputValue}
+                      onChange={(e) => {
+                        setInputValue(e.target.value);
+                      }}
+                      placeholder="Type here"
+                      className="w-full p-2 border rounded-lg"
+                    />
+                  </form>
                 </div>
               </div>
             </div>
@@ -293,7 +431,7 @@ const TakeExam = ({
         ) : null}
         {/* Model */}
         {/* SildeBar */}
-        <div className="hidden sm:block text-white  xl:w-[15%] lg:w-[25%] md:w-[25%]  h-full bg-[#1d3461]">
+        <div className="hidden sm:block text-white  xl:w-[15%] lg:w-[20%] md:w-[20%] w-[10%]  h-full bg-[#1d3461]">
           <div className="flex flex-col items-center justify-center text-2xl font-bold bg-[#829cbc] text-black">
             <p>{studentId}</p>
             <p>{studentName}</p>
@@ -320,13 +458,13 @@ const TakeExam = ({
               }}
               className="flex items-center  gap-2 text-xl"
             >
-              <FaRegCalendarCheck /> Submit Exam
+              <FaRegCalendarCheck /> Submit
             </p>
           </div>
 
           {/* Exam Time remaining */}
-          <div className="xl:w-[15%] lg:w-[25%] md:w-[25%] p-4 absolute bottom-0  text-center">
-            <p className="flex justify-center items-center gap-2 text-xl">
+          <div className="xl:w-[15%] lg:w-[20%] md:w-[20%] w-[10%] flex  justify-center p-2 mx-auto  text-center absolute bottom-0 -left-4 ">
+            <p className="flex items-center  gap-2 text-xl">
               <FaClock />
               {formatTime(time.hour)}:{formatTime(time.minute)}
             </p>
