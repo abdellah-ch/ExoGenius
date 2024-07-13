@@ -79,7 +79,7 @@ const ChatComponent = (props: any) => {
     fetchMessages();
 
     // Initialize WebSocket connection
-    ws.current = new WebSocket("ws://exogeniusnode.onrender.com");
+    ws.current = new WebSocket("wss://exogeniusnode.onrender.com");
 
     // Handle incoming messages
     ws.current.onmessage = (event: any) => {
