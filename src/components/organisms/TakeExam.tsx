@@ -165,7 +165,7 @@ const TakeExam = ({
   useEffect(() => {
     fetchTeacherId();
     fetchMessages();
-    ws.current = new WebSocket("ws://localhost:8000");
+    ws.current = new WebSocket("ws://exogeniusnode.onrender.com");
 
     // Handle incoming messages
     ws.current.onmessage = (event: any) => {
